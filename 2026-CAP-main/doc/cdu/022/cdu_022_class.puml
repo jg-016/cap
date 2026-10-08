@@ -1,0 +1,76 @@
+@startuml CDU_022_Remover_Calendario_da_Turma
+left to right direction
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "Interface" {
+  class "turmas/turma.html" as TurmaTemplate <<template>> {
+    lista de calendários da turma
+    formulário Remover por calendário
+  }
+}
+
+package "Aplicação Django" {
+  class "apps.turmas.views" as TurmaViews <<view module>> {
+    turma(request, id)
+    remover_calendario_turma(request, turma_id, calendario_id?)
+  }
+
+  class "apps.turmas.urls" as TurmaUrls <<URLconf>> {
+    turma/<id>
+    remover_calendario/<turma_id>
+    remover_calendario/<turma_id>/<calendario_id>
+  }
+}
+
+package "Modelos" {
+  class Usuario <<model>>
+
+  class Turma <<model>> {
+    nome: CharField(100)
+    descricao: CharField(500)
+    codigo: CharField(6)
+  }
+
+  class MembroDeTurma <<model>> {
+    eh_admin: Boolean
+    numero_paleta: PositiveInteger
+  }
+
+  class Calendario <<model>> {
+    nome: CharField(100)
+    descricao: CharField(500)
+    turma: ForeignKey(Turma, null)
+  }
+
+  class MembroDeCalendario <<model>> {
+    eh_admin: Boolean
+    numero_paleta: PositiveInteger
+  }
+}
+
+TurmaTemplate ..> TurmaViews : envia solicitação POST
+TurmaViews ..> Turma : busca turma
+TurmaViews ..> MembroDeTurma : verifica permissão de admin
+TurmaViews ..> Calendario : valida vínculo e atualiza turma
+TurmaUrls ..> TurmaViews : roteia requisições
+
+Usuario "1" -- "0..*" MembroDeTurma
+Turma "1" -- "0..*" MembroDeTurma
+Turma "0..1" -- "0..*" Calendario : turma
+Usuario "1" -- "0..*" MembroDeCalendario
+Calendario "1" -- "0..*" MembroDeCalendario
+
+note bottom of TurmaViews
+  Somente administrador da turma pode remover.
+  A operação só prossegue se o calendário
+  estiver associado à turma informada.
+end note
+
+note bottom of Calendario
+  Remover da turma define turma = null.
+  O calendário, seus eventos e membros
+  não são apagados.
+end note
+@enduml

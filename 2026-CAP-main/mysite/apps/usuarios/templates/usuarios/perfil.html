@@ -1,0 +1,86 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'usuarios/css/perfil.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'usuarios/js/perfil.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="faixa"></div>
+
+<section class="pagina-perfil">
+
+    <form method="POST" id="form-perfil">
+        {% csrf_token %}
+
+        <header class="topo-perfil">
+            <div class="foto-perfil" id="iniciais">{{ request.user.nome_completo|slice:":2"|upper }}</div>
+            <div class="botoes-perfil" id="botoes">
+                <button type="button" class="botao" id="botao-editar">Editar perfil</button>
+            </div>
+        </header>
+
+        <section class="dados-principais">
+            <h1 class="nome-perfil" id="nome-texto">{{ request.user.nome_completo }}</h1>
+
+            <div class="campo-nome" id="nome-campo">
+                <label for="campo-nome">Nome</label>
+                <input type="text" id="campo-nome" name="nome_completo" value="{{ request.user.nome_completo }}">
+            </div>
+            <p class="descricao">Perfil do estudante.</p>
+        </section>
+
+        <section class="cartoes" aria-label="Informações do perfil">
+
+            <article class="cartao">
+                <h2 class="rotulo">E-mail</h2>
+                <p class="valor" id="email-texto">{{ request.user.email }} </p>
+                <div class="campo-edicao" id="email-campo">
+                    <label for="campo-email">E-mail</label>
+                    <input type="email" id="campo-email" name="email" value="{{ request.user.email }}">
+                </div>
+            </article>
+
+            <article class="cartao">
+                <h2 class="rotulo">Membro desde</h2>
+                <p class="valor">{{ request.user.criado_em|date:"d/m/Y" }}</p>
+            </article>
+        </section>
+    </form>
+    <div class="excluir-conta">
+    <button type="button" class="botao-excluir" id="botao-excluir">Excluir conta</button>
+</div>
+
+<div class="modal-exclusao" id="modal-exclusao">
+    <div class="caixa-exclusao">
+        <h2>Excluir conta</h2>
+        <p>Tem certeza que deseja excluir sua conta? Essa ação não poderá ser desfeita.</p>
+
+        <div class="botoes-exclusao">
+            <button type="button" class="botao" id="botao-cancelar-exclusao">Cancelar </button>
+
+            <form method="POST" action="{% url 'excluir_conta' %}">
+                {% csrf_token %}
+                <button type="submit" class="botao botao-escuro">Excluir conta</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    {% if sucesso %}
+        <p class="aviso visivel" id="aviso">{{ sucesso }}</p>
+    {% endif %}
+
+    {% if erro %}
+        <p class="aviso erro visivel" id="aviso">{{ erro }}</p>
+    {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,205 @@
+.topo--compact {
+    margin-top: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #d0d0d0;
+}
+
+.calendar-members {
+    margin-top: 20px;
+}
+
+.calendar-week-view {
+    margin-top: 24px;
+}
+
+.calendar-week-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.calendar-week-toolbar h2 {
+    margin: 0 auto;
+}
+
+.calendar-week-grid {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    min-height: 720px;
+    border: 1px solid #e5e7eb;
+}
+
+.calendar-days {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-day-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-left: 1px solid #e5e7eb;
+}
+
+.calendar-times {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.calendar-time-slot,
+.calendar-hour-cell {
+    height: 30px;
+    box-sizing: border-box;
+    border-top: 1px solid #e5e7eb;
+}
+
+.calendar-time-slot span {
+    display: block;
+    padding: 4px;
+    font-size: 12px;
+}
+
+.calendar-columns {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.calendar-day-column {
+    position: relative;
+    border-left: 1px solid #e5e7eb;
+}
+
+.calendar-event-block {
+    position: absolute;
+    z-index: 1;
+    width: calc(100% - 8px);
+    margin: 0 4px;
+    padding: 4px;
+    box-sizing: border-box;
+    overflow: hidden;
+    color: #fff;
+    background: #a8d8ea;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+main .topo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+main .topo h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    margin: 0;
+    font-size: clamp(2rem, 2.5vw, 3rem);
+    line-height: 1.2;
+    font-weight: 800;
+    color: #111827;
+}
+
+main .topo .separacao {
+    color: #111827;
+    font-weight: 400;
+}
+
+main .topo .link-calendario,
+main .topo .link-turma {
+    color: #111827;
+    text-decoration: none;
+}
+
+main .topo .link-calendario:hover,
+main .topo .link-turma:hover {
+    text-decoration: underline;
+}
+
+main .topo .circulo-paleta {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ef6f6c;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.08);
+}
+
+main .topo .icone-atualizar,
+main .topo .icone-deletar {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    color: #111827;
+}
+
+main .topo .icone-atualizar span,
+main .topo .icone-deletar span {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.descricao {
+    margin-top: 18px;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+    color: #111827;
+}
+
+main h3 {
+    margin: 18px 0 0;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+main .lista-membros {
+    margin-top: 8px;
+    border-top: 1px solid #cfcfcf;
+}
+
+main .membro {
+    display: flex;
+    align-items: center;
+    min-height: 58px;
+    padding: 0 0 0 8px;
+    border-bottom: 1px solid #cfcfcf;
+    color: #111827;
+}
+
+main .membro p {
+    flex: 1;
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+main .membro .icone-email {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    color: #111827;
+    font-size: 24px;
+    margin-left: auto;
+}
+
+main .membro .icone-email span {
+    font-size: 24px;
+}
+
+main .membro .membro-eh-admin {
+    margin-left: auto;
+}
+
+main .icone-atualizar:not(.admin) span,
+main .icone-deletar:not(.admin) span {
+    fill: #111827;
+}

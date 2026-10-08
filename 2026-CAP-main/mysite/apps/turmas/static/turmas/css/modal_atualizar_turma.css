@@ -1,0 +1,103 @@
+.modal-atualizar-turma {
+    width: min(460px, calc(100% - 32px));
+    padding: 0;
+    margin: auto auto;
+    border: 0;
+    border-radius: 10px;
+    color: #1f2937;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal-atualizar-turma::backdrop {
+    background: rgba(17, 24, 39, 0.6);
+}
+
+.modal-atualizar-turma__conteudo {
+    position: relative;
+    padding: 28px;
+}
+
+.modal-atualizar-turma__conteudo h2 {
+    margin: 0 36px 8px 0;
+    color: #111827;
+    font-size: 20px;
+}
+
+.modal-atualizar-turma__conteudo > p {
+    margin: 0 0 24px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.modal-atualizar-turma__fechar {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #6b7280;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-atualizar-turma__campo {
+    margin-bottom: 16px;
+}
+
+.modal-atualizar-turma__campo label {
+    display: block;
+    margin-bottom: 6px;
+    color: #374151;
+    font-weight: 600;
+}
+
+.modal-atualizar-turma__campo input,
+.modal-atualizar-turma__campo textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    color: #111827;
+    font: inherit;
+}
+
+.modal-atualizar-turma__campo textarea {
+    resize: vertical;
+}
+
+.modal-atualizar-turma__campo input:focus,
+.modal-atualizar-turma__campo textarea:focus {
+    border-color: #2563eb;
+    outline: 2px solid rgba(37, 99, 235, 0.2);
+}
+
+.modal-atualizar-turma__acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-atualizar-turma__acoes button {
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+    cursor: pointer;
+}
+
+.modal-atualizar-turma__acoes .modal-atualizar-turma__salvar {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.modal-atualizar-turma__acoes .modal-atualizar-turma__salvar:hover {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+}

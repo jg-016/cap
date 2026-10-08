@@ -1,0 +1,53 @@
+<dialog
+    class="modal-atualizar-turma"
+    id="modal-atualizar-turma"
+    aria-labelledby="modal-atualizar-turma-titulo"
+>
+    <section class="modal-atualizar-turma__conteudo">
+        <button
+            class="modal-atualizar-turma__fechar"
+            type="button"
+            data-fechar-modal
+            aria-label="Fechar"
+        >
+            &times;
+        </button>
+
+        <h2 id="modal-atualizar-turma-titulo">Atualizar turma</h2>
+        <p>Edite o nome e a descrição da turma.</p>
+
+        <form method="post" action="{% url 'atualizar_turma' turma.id %}">
+            {% csrf_token %}
+            <div class="modal-atualizar-turma__campo">
+                <label for="atualizar-turma-nome">Nome</label>
+                <input
+                    id="atualizar-turma-nome"
+                    name="nome"
+                    type="text"
+                    value="{{ turma.nome }}"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="modal-atualizar-turma__campo">
+                <label for="atualizar-turma-descricao">Descrição</label>
+                <textarea
+                    id="atualizar-turma-descricao"
+                    name="descricao"
+                    rows="4"
+                    maxlength="500"
+                >{{ turma.descricao }}</textarea>
+            </div>
+
+            <div class="modal-atualizar-turma__acoes">
+                <button class="modal-atualizar-turma__cancelar" type="button" data-fechar-modal>
+                    Cancelar
+                </button>
+                <button class="modal-atualizar-turma__salvar" type="submit">
+                    Atualizar
+                </button>
+            </div>
+        </form>
+    </section>
+</dialog>

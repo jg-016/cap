@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ evento.nome }}{% endblock %}
+
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'eventos/css/visualizar_evento.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="evento-detalhes" aria-labelledby="evento-titulo">
+    <a href="{% url 'inicio' %}">Voltar ao calendário geral</a>
+    <h1 id="evento-titulo">{{ evento.nome }}</h1>
+
+    <dl>
+        <dt>Descrição</dt>
+        <dd>{{ evento.conteudo|default:"Sem descrição." }}</dd>
+
+        <dt>Data</dt>
+        <dd>{{ evento.inicio|date:"d/m/Y" }}</dd>
+
+        <dt>Horário</dt>
+        <dd>{{ evento.inicio|date:"H:i" }} - {{ evento.fim|date:"H:i" }}</dd>
+
+        <dt>Calendário</dt>
+        <dd>{{ evento.calendario.nome }}</dd>
+    </dl>
+
+    {% if usuario_eh_admin %}
+        <button
+            class="evento-detalhes__deletar"
+            type="button"
+            data-abrir-modal="modal-deletar-evento"
+        >
+            Deletar evento
+        </button>
+        {% include 'eventos/modal_deletar_evento.html' %}
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    {% load static %}
+    <script src="{% static 'eventos/js/modal_deletar_evento.js' %}" defer></script>
+{% endblock %}

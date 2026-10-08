@@ -1,0 +1,42 @@
+@startuml CDU_021_Adicionar_Calendario_a_Turma
+hide footbox
+skinparam monochrome true
+skinparam shadowing false
+
+actor Estudante as E
+participant "Tela da Turma" as Tela
+participant "TurmaController/View" as TurmaView
+participant "CalendarioService" as Servico
+participant "Turma" as TurmaEnt
+participant "Calendario" as CalendarioEnt
+participant "Banco de Dados" as BD
+
+E -> Tela: Acessa página da turma
+Tela -> TurmaView: carregarTurma(turmaId)
+TurmaView -> TurmaEnt: buscarTurma(turmaId)
+TurmaEnt -> BD: consultar turma
+BD --> TurmaEnt: turma encontrada
+TurmaEnt --> TurmaView: dados da turma
+TurmaView --> Tela: exibe informações e opções
+
+E -> Tela: seleciona "Adicionar calendário"
+Tela -> TurmaView: abrirFormularioCadastroCalendario(turmaId)
+TurmaView --> Tela: exibe formulário
+
+E -> Tela: informa nome e descrição do calendário
+Tela -> TurmaView: criarCalendario(turmaId, nome, descricao)
+TurmaView -> TurmaEnt: validarAdministrador(E, turmaId)
+TurmaEnt -> BD: consultar membro da turma
+BD --> TurmaEnt: administrador confirmado
+TurmaView -> Servico: criarCalendario(turmaId, nome, descricao)
+Servico -> CalendarioEnt: instanciar calendário
+CalendarioEnt -> BD: salvar calendário
+BD --> CalendarioEnt: calendário criado
+Servico -> TurmaEnt: associarCalendario(turma, calendario)
+TurmaEnt -> BD: atualizar associação turma-calendario
+BD --> TurmaEnt: associação salva
+Servico --> TurmaView: calendário associado com sucesso
+TurmaView --> Tela: mensagem de sucesso
+Tela --> E: redireciona para página da turma
+
+@enduml

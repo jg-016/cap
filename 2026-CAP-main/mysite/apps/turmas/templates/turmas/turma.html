@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ turma.nome }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'turmas/css/turma.css' %}">
+    <link rel="stylesheet" href="{% static 'turmas/css/modal_atualizar_turma.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/calendario_geral.css' %}">
+    <link rel="stylesheet" href="{% static 'eventos/css/modal_criar_evento.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="cabecalho">
+        <h1 class="nome-turma">{{ turma.nome }}</h1>
+
+        <div class="cor-turma paleta-{{ turma.paleta }}"></div>
+
+        {% if usuario_eh_admin %}
+            <button
+                class="icone icone-atualizar"
+                type="button"
+                data-abrir-modal="modal-atualizar-turma"
+                aria-label="Atualizar turma"
+            >
+                <span class="material-symbols-outlined">edit</span>
+            </button>
+        {% endif %}
+
+        <a href="{% url 'deletar_turma' turma.id %}" class="icone icone-deletar">
+            <span class="material-symbols-outlined">delete</span>
+        </a>
+    </div>
+
+    {% for message in messages %}
+        <p class="turma-mensagem turma-mensagem--{{ message.tags }}" role="status">
+            {{ message }}
+        </p>
+    {% endfor %}
+
+    <hr>
+
+    <div class="descricao">
+        {{ turma.descricao }}
+    </div>
+
+    {% if usuario_eh_admin %}
+        <section class="bloco-calendarios-turma">
+            <h2>Calendários da turma</h2>
+
+            <form method="post" action="{% url 'adicionar_calendario' turma.id %}" class="form-adicionar-calendario">
+                {% csrf_token %}
+
+                <label for="calendario_id">Associar calendário</label>
+                <select id="calendario_id" name="calendario_id" required>
+                    <option value="" selected disabled>Selecione um calendário</option>
+                    {% for calendario in calendarios_disponiveis %}
+                        <option value="{{ calendario.id }}">{{ calendario.nome }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Adicionar</button>
+            </form>
+
+            <form method="post" action="{% url 'criar_calendario_turma' turma.id %}" class="form-criar-calendario-turma">
+                {% csrf_token %}
+                <label for="nome_calendario_turma">Criar calendário para a turma</label>
+                <input id="nome_calendario_turma" type="text" name="nome" placeholder="Nome do calendário" maxlength="100" required>
+                <textarea name="descricao" placeholder="Descrição" rows="3" maxlength="500"></textarea>
+                <button type="submit">Criar e associar</button>
+            </form>
+
+            {% if turma.calendarios %}
+                <ul class="lista-calendarios-turma">
+                    {% for calendario in turma.calendarios %}
+                        <li>
+                            <a href="{% url 'calendario' calendario.id %}">{{ calendario.nome }}</a>
+                            <form method="post" action="{% url 'remover_calendario_turma' turma.id calendario.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="botao-remover">Remover</button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <li>Não há calendários associados a esta turma.</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Não há calendários associados a esta turma.</p>
+            {% endif %}
+        </section>
+    {% endif %}
+
+    {% include 'core/calendario_geral.html' %}
+
+    {% if usuario_eh_admin %}
+        {% include 'turmas/modal_atualizar_turma.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'turmas/js/modal_atualizar_turma.js' %}" defer></script>
+{% endblock %}

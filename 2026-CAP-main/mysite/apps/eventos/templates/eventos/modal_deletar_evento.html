@@ -1,0 +1,30 @@
+<dialog
+    class="modal-deletar-evento"
+    id="modal-deletar-evento"
+    aria-labelledby="confirmacao-titulo"
+>
+    <div class="modal-deletar-evento__conteudo">
+        <button
+            class="modal-deletar-evento__fechar"
+            type="button"
+            data-fechar-modal
+            aria-label="Fechar"
+        >
+        </button>
+        <h2 id="confirmacao-titulo">Deletar evento</h2>
+        <p>Tem certeza que deseja deletar o evento <strong>{{ evento.nome }}</strong>?</p>
+        <p>Essa ação não poderá ser desfeita.</p>
+
+        <form method="post" action="{% url 'eventos:deletar_evento' evento.id %}">
+            {% csrf_token %}
+            <div class="modal-deletar-evento__acoes">
+                <button class="modal-deletar-evento__cancelar" type="button" data-fechar-modal>
+                    Cancelar
+                </button>
+                <button class="modal-deletar-evento__confirmar" type="submit">
+                    Deletar evento
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>

@@ -1,0 +1,236 @@
+/* =========================================
+   MODAL CRIAR EVENTO
+   ========================================= */
+
+.modal-criar-evento {
+    display: none;
+
+    position: fixed;
+    z-index: 10;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background-color: rgba(0, 0, 0, 0.55);
+
+    align-items: center;
+    justify-content: center;
+
+    /* Caixa do modal */
+
+    .modal-criar-evento-conteudo {
+        width: 500px;
+        max-width: calc(100% - 40px);
+
+        padding: 25px;
+
+        box-sizing: border-box;
+
+        background-color: white;
+
+        border-radius: 12px;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+
+    /* Título */
+
+    .modal-criar-evento-conteudo h2 {
+        margin: 0 0 20px 0;
+
+        font-size: 24px;
+
+        color: #333;
+    }
+
+
+    /* Labels */
+
+    .modal-criar-evento-conteudo label {
+        display: block;
+
+        margin-top: 12px;
+        margin-bottom: 6px;
+
+        font-size: 14px;
+
+        font-weight: bold;
+
+        color: #333;
+    }
+
+    /* Inputs */
+
+
+    .modal-criar-evento-conteudo .calendario-selecionado,
+    .modal-criar-evento-conteudo input,
+    .modal-criar-evento-conteudo textarea {
+        width: 100%;
+        height: 50px;
+
+        padding-inline  : 11px;
+        background-color: white;
+        color: #333;
+        font-size: 14px;
+
+        border: 1px solid #ccc;
+        border-radius: 6px;
+
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* Foco */
+
+    .modal-criar-evento-conteudo .calendario-selecionado:focus,
+    .modal-criar-evento-conteudo input:focus,
+    .modal-criar-evento-conteudo textarea:focus {
+        outline: none;
+
+        border-color: #288012;
+    }
+
+
+    /* Horários */
+
+    .horarios-evento {
+        display: flex;
+
+        gap: 15px;
+    }
+
+    .horarios-evento > div {
+        flex: 1;
+    }
+
+
+    /* Descrição */
+
+    .modal-criar-evento-conteudo textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+
+    /* Área dos botões */
+
+    .botoes-evento {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+
+    /* Botões */
+
+    .botoes-evento button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .botao-cancelar-evento {
+        background-color: #e5e7eb;
+        color: #333;
+    }
+
+    .botao-cancelar-evento:hover {
+        background-color: #d1d5db;
+    }
+
+    .botao-salvar-evento {
+        background-color: #288012;
+        color: white;
+    }
+
+    .botao-salvar-evento:hover {
+        background-color: #20660e;
+    }
+
+
+    @media (max-width: 600px) {
+
+        .modal-criar-evento-conteudo {
+            max-width: calc(100% - 20px);
+            padding: 20px;
+        }
+
+        .horarios-evento {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .botoes-evento {
+            flex-direction: column;
+        }
+    }
+
+    /* =========================================
+    SELECIONAR CALENDÁRIO
+    ========================================= */
+    .selecionar-calendario {
+        position: relative;
+    }
+    .opcao-calendario {
+        width: 100%;
+        border-radius: 8px;
+        
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .opcao-calendario {
+        padding: 4px 5px;   
+    }
+    .circulo {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background-color: var(--cor-clara);
+    }
+    .info-calendario {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+    }
+    .nome-calendario {
+        font-size: 16px;
+        font-weight: normal;
+        color: black;
+    }
+    .nome-turma {
+        margin-left: auto;
+        font-size: 12px; 
+        color: #707070;
+    }
+    .opcao-calendario:hover:not(.selecionado) {
+        background-color: #eeeeee;
+    }
+    .icone-abrir-opcoes-calendarios {
+        justify-self: end;
+        * {width: 13px}
+    }
+    .opcoes-calendario {
+        position: absolute;
+        z-index: 20;
+
+        background-color: white;
+        width: 100%;
+        padding: 5px 6px;
+        margin-top: 5px;
+        max-height: 260px;
+        overflow-y: scroll;
+
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+}

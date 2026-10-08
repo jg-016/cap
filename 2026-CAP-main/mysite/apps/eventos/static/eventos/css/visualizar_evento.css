@@ -1,0 +1,144 @@
+.evento-detalhes {
+    max-width: 640px;
+    margin: 48px auto;
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.evento-detalhes > a:first-child {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #2563eb;
+    font-size: 14px;
+}
+
+.evento-detalhes > a:first-child:hover {
+    text-decoration: underline;
+}
+
+.evento-detalhes h1 {
+    margin-bottom: 24px;
+    color: #111827;
+    font-size: 30px;
+}
+
+.evento-detalhes dl {
+    display: grid;
+    gap: 6px 16px;
+    grid-template-columns: 120px 1fr;
+}
+
+.evento-detalhes dt {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.evento-detalhes dd {
+    color: #1f2937;
+    margin: 0;
+}
+
+.evento-detalhes__deletar {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 6px;
+    background: #dc2626;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.evento-detalhes__deletar:hover {
+    background: #b91c1c;
+}
+
+.modal-deletar-evento {
+    width: min(420px, calc(100% - 32px));
+    padding: 10px;
+    margin: auto auto;
+    border: 0;
+    border-radius: 8px;
+    color: #1f2937;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal-deletar-evento::backdrop {
+    background: rgba(17, 24, 39, 0.6);
+}
+
+.modal-deletar-evento__conteudo {
+    position: relative;
+    padding: 28px;
+}
+
+.modal-deletar-evento__conteudo h2 {
+    margin: 0 32px 16px 0;
+    color: #111827;
+    font-size: 20px;
+}
+
+.modal-deletar-evento__conteudo p {
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.modal-deletar-evento__fechar {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #6b7280;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-deletar-evento__acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-deletar-evento__acoes button {
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+    cursor: pointer;
+}
+
+.modal-deletar-evento__acoes .modal-deletar-evento__confirmar {
+    border-color: #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.modal-deletar-evento__acoes .modal-deletar-evento__confirmar:hover {
+    border-color: #b91c1c;
+    background: #b91c1c;
+}
+
+@media (max-width: 600px) {
+    .evento-detalhes {
+        margin: 24px 0;
+        padding: 20px;
+    }
+
+    .evento-detalhes dl {
+        display: block;
+    }
+
+    .evento-detalhes dt {
+        margin-top: 14px;
+    }
+}
