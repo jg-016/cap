@@ -7,22 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <section id="calendar-week-view" class="calendar-week-view" aria-labelledby="calendar-month-label">
-        <div class="calendar-week-toolbar">
-            <button type="button" data-action="prev" aria-label="Semana anterior">Anterior</button>
-            <h2 id="calendar-month-label"></h2>
-            <button type="button" data-action="today">Hoje</button>
-            <button type="button" data-action="next" aria-label="Próxima semana">Próxima</button>
-        </div>
-
-        <div class="calendar-week-grid">
-            <div id="calendar-days" class="calendar-days"></div>
-            <div id="calendar-times" class="calendar-times"></div>
-            <div id="calendar-columns" class="calendar-columns"></div>
-        </div>
-    </section>
-
-    <section class="calendar-members" aria-labelledby="calendar-members-title">
+    <section class="calendar-members calendar-members__identity" aria-labelledby="calendar-members-title">
         <div class="topo topo--compact">
             <h1 id="calendar-members-title">
                 <a href="#" class="link-calendario">{{ calendario.nome }}</a>
@@ -50,17 +35,34 @@
                 </a>
             {% endif %}
         </div>
+        <p class="descricao">{{ calendario.descricao }}</p>
+    </section>
 
-    <p class="descricao">{{ calendario.descricao }}</p>
-    <h3>Líderes</h3>
-    <div class="lista-membros lideres">
-        {% for lider in calendario.lideres %}
-            <div class="membro lider">
-                <p>{{ lider.nome }}</p>
-                <span class="icone-email material-symbols-outlined">mail</span>
-            </div>
-        {% endfor %}
-    </div>
+    <section id="calendar-week-view" class="calendar-week-view" aria-labelledby="calendar-month-label">
+        <div class="calendar-week-toolbar">
+            <button type="button" data-action="prev" aria-label="Semana anterior">Anterior</button>
+            <h2 id="calendar-month-label"></h2>
+            <button type="button" data-action="today">Hoje</button>
+            <button type="button" data-action="next" aria-label="Próxima semana">Próxima</button>
+        </div>
+
+        <div class="calendar-week-grid">
+            <div id="calendar-days" class="calendar-days"></div>
+            <div id="calendar-times" class="calendar-times"></div>
+            <div id="calendar-columns" class="calendar-columns"></div>
+        </div>
+    </section>
+
+    <section class="calendar-members__lists" aria-label="Membros do calendário">
+        <h3>Líderes</h3>
+        <div class="lista-membros lideres">
+            {% for lider in calendario.lideres %}
+                <div class="membro lider">
+                    <p>{{ lider.nome }}</p>
+                    <span class="icone-email material-symbols-outlined">mail</span>
+                </div>
+            {% endfor %}
+        </div>
 
         <h3>Membros comuns</h3>
         <div class="lista-membros membros-comuns">
@@ -80,6 +82,7 @@
 
         const DAYS_PT = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
         const MONTHS_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+        const PIXELS_PER_HOUR = 30;
         let weekOffset = 0;
         const BASE_DATE = new Date();
         BASE_DATE.setHours(0, 0, 0, 0);
@@ -154,8 +157,8 @@
                     block.className = 'calendar-event-block';
                     block.setAttribute('role', 'link');
                     block.tabIndex = 0;
-                    block.style.top = `${event.start * 60}px`;
-                    block.style.height = `${(event.end - event.start) * 60}px`;
+                    block.style.top = `${event.start * PIXELS_PER_HOUR}px`;
+                    block.style.height = `${(event.end - event.start) * PIXELS_PER_HOUR}px`;
                     block.style.backgroundColor = event.color || '#A8D8EA';
                     block.innerHTML = `
                         <div class="calendar-event-title">${event.title}</div>

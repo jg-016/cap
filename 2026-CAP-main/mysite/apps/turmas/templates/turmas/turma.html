@@ -5,6 +5,7 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'turmas/css/turma.css' %}">
     <link rel="stylesheet" href="{% static 'turmas/css/modal_atualizar_turma.css' %}">
+    <link rel="stylesheet" href="{% static 'turmas/css/calendarios_turma.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/calendario_geral.css' %}">
     <link rel="stylesheet" href="{% static 'eventos/css/modal_criar_evento.css' %}">
 {% endblock %}
@@ -45,51 +46,114 @@
 
     {% if usuario_eh_admin %}
         <section class="bloco-calendarios-turma">
-            <h2>Calendários da turma</h2>
-
-            <form method="post" action="{% url 'adicionar_calendario' turma.id %}" class="form-adicionar-calendario">
-                {% csrf_token %}
-
-                <label for="calendario_id">Associar calendário</label>
-                <select id="calendario_id" name="calendario_id" required>
-                    <option value="" selected disabled>Selecione um calendário</option>
-                    {% for calendario in calendarios_disponiveis %}
-                        <option value="{{ calendario.id }}">{{ calendario.nome }}</option>
-                    {% endfor %}
-                </select>
-
-                <button type="submit">Adicionar</button>
-            </form>
-
-            <form method="post" action="{% url 'criar_calendario_turma' turma.id %}" class="form-criar-calendario-turma">
-                {% csrf_token %}
-                <label for="nome_calendario_turma">Criar calendário para a turma</label>
-                <input id="nome_calendario_turma" type="text" name="nome" placeholder="Nome do calendário" maxlength="100" required>
-                <textarea name="descricao" placeholder="Descrição" rows="3" maxlength="500"></textarea>
-                <button type="submit">Criar e associar</button>
-            </form>
+            <div class="bloco-calendarios-turma__cabecalho">
+                <div>
+                    <h2>Calendários da turma</h2>
+                </div>
+                <div class="bloco-calendarios-turma__acoes">
+                    <button
+                        class="botao-calendario botao-calendario--secundario"
+                        type="button"
+                        data-abrir-modal="modal-associar-calendario-turma"
+                        {% if not calendarios_disponiveis %}disabled{% endif %}
+                    >
+                        Associar calendário
+                    </button>
+                    <button
+                        class="botao-calendario botao-calendario--principal"
+                        type="button"
+                        data-abrir-modal="modal-criar-calendario-turma"
+                    >
+                        Criar calendário
+                    </button>
+                </div>
+            </div>
 
             {% if turma.calendarios %}
                 <ul class="lista-calendarios-turma">
                     {% for calendario in turma.calendarios %}
                         <li>
-                            <a href="{% url 'calendario' calendario.id %}">{{ calendario.nome }}</a>
-                            <form method="post" action="{% url 'remover_calendario_turma' turma.id calendario.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="botao-remover">Remover</button>
-                            </form>
+                            <a class="lista-calendarios-turma__link" href="{% url 'calendario' calendario.id %}">
+                                <span class="lista-calendarios-turma__indicador paleta-{{ calendario.paleta }}"></span>
+                                <span>{{ calendario.nome }}</span>
+                            </a>
+                            <button
+                                class="botao-calendario botao-calendario--remover"
+                                type="button"
+                                data-abrir-modal="modal-remover-calendario-{{ calendario.id }}"
+                            >
+                                Remover
+                            </button>
                         </li>
-                    {% empty %}
-                        <li>Não há calendários associados a esta turma.</li>
                     {% endfor %}
                 </ul>
-            {% else %}
-                <p>Não há calendários associados a esta turma.</p>
             {% endif %}
         </section>
+
+        <dialog class="modal-calendarios-turma" id="modal-associar-calendario-turma" aria-labelledby="modal-associar-calendario-turma-titulo">
+            <section class="modal-calendarios-turma__conteudo">
+                <button class="modal-calendarios-turma__fechar" type="button" data-fechar-modal aria-label="Fechar">&times;</button>
+                <h2 id="modal-associar-calendario-turma-titulo">Associar calendário</h2>
+                <p>Selecione um calendário pessoal para vinculá-lo à turma.</p>
+                <form class="modal-calendarios-turma__form-associar" method="post" action="{% url 'adicionar_calendario' turma.id %}">
+                    {% csrf_token %}
+                    <div class="modal-calendarios-turma__campo">
+                        <label for="calendario_id">Calendário</label>
+                        <select id="calendario_id" name="calendario_id" required>
+                            <option value="" selected disabled>Selecione um calendário</option>
+                            {% for calendario in calendarios_disponiveis %}
+                                <option value="{{ calendario.id }}">{{ calendario.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-calendarios-turma__acoes">
+                        <button class="botao-calendario botao-calendario--secundario" type="button" data-fechar-modal>Cancelar</button>
+                        <button class="botao-calendario botao-calendario--principal" type="submit">Associar</button>
+                    </div>
+                </form>
+            </section>
+        </dialog>
+
+        <dialog class="modal-calendarios-turma" id="modal-criar-calendario-turma" aria-labelledby="modal-criar-calendario-turma-titulo">
+            <section class="modal-calendarios-turma__conteudo">
+                <button class="modal-calendarios-turma__fechar" type="button" data-fechar-modal aria-label="Fechar">&times;</button>
+                <h2 id="modal-criar-calendario-turma-titulo">Criar calendário</h2>
+                <p>O calendário será criado e compartilhado com os membros da turma.</p>
+                <form method="post" action="{% url 'criar_calendario_turma' turma.id %}">
+                    {% csrf_token %}
+                    <label for="nome_calendario_turma">Nome</label>
+                    <input id="nome_calendario_turma" type="text" name="nome" maxlength="100" required>
+                    <label for="descricao_calendario_turma">Descrição</label>
+                    <textarea id="descricao_calendario_turma" name="descricao" rows="4" maxlength="500"></textarea>
+                    <div class="modal-calendarios-turma__acoes">
+                        <button class="botao-calendario botao-calendario--secundario" type="button" data-fechar-modal>Cancelar</button>
+                        <button class="botao-calendario botao-calendario--principal" type="submit">Criar e associar</button>
+                    </div>
+                </form>
+            </section>
+        </dialog>
+
+        {% for calendario in turma.calendarios %}
+            <dialog class="modal-calendarios-turma" id="modal-remover-calendario-{{ calendario.id }}" aria-labelledby="modal-remover-calendario-{{ calendario.id }}-titulo">
+                <section class="modal-calendarios-turma__conteudo">
+                    <button class="modal-calendarios-turma__fechar" type="button" data-fechar-modal aria-label="Fechar">&times;</button>
+                    <h2 id="modal-remover-calendario-{{ calendario.id }}-titulo">Remover calendário</h2>
+                    <p>Deseja desassociar “{{ calendario.nome }}” desta turma? O calendário e seus eventos não serão apagados.</p>
+                    <form method="post" action="{% url 'remover_calendario_turma' turma.id calendario.id %}">
+                        {% csrf_token %}
+                        <div class="modal-calendarios-turma__acoes">
+                            <button class="botao-calendario botao-calendario--secundario" type="button" data-fechar-modal>Cancelar</button>
+                            <button class="botao-calendario botao-calendario--remover" type="submit">Remover</button>
+                        </div>
+                    </form>
+                </section>
+            </dialog>
+        {% endfor %}
     {% endif %}
 
-    {% include 'core/calendario_geral.html' %}
+    <section class="turma-calendario-principal" aria-label="Calendário da turma">
+        {% include 'core/calendario_geral.html' %}
+    </section>
 
     {% if usuario_eh_admin %}
         {% include 'turmas/modal_atualizar_turma.html' %}
@@ -98,4 +162,5 @@
 
 {% block extra_js %}
     <script src="{% static 'turmas/js/modal_atualizar_turma.js' %}" defer></script>
+    <script src="{% static 'turmas/js/modal_calendarios_turma.js' %}" defer></script>
 {% endblock %}

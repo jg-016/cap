@@ -1,5 +1,7 @@
 .calendario-geral {
     flex: 1;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
 }
@@ -28,9 +30,13 @@
 }
 
 .scroll-container {
-    overflow: scroll;
+    overflow: auto;
     width: 100%;
-    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
 }
 
 .calendario-geral-2 {
@@ -42,7 +48,7 @@
 
     display: grid;
     grid-template-columns: var(--width-coluna-1) max(1200px, calc(100% - var(--width-coluna-1)));
-    grid-template-rows: var(--height-fileira-1) max(2000px, calc(100% - var(--height-fileira-1)));
+    grid-template-rows: var(--height-fileira-1) 2000px;
     grid-template-areas: 
     '.        datas'
     'horarios grade';
@@ -136,23 +142,50 @@
     .evento-horario {
         font-size: 10px;
     }
-    .botao-criar-evento {
-        position: fixed;
-        right: 25px;
-        bottom: 25px;
-        z-index: 1000;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        background-color: #288012;
-        color: white;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ferramentas-navegacao .botao-criar-evento {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 36px;
+    margin-left: 12px;
+    padding: 7px 14px;
+    border: 0;
+    border-radius: 10px;
+    background-color: #288012;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ferramentas-navegacao .botao-criar-evento:hover {
+    background-color: #20660e;
+}
+
+.ferramentas-navegacao .botao-criar-evento:focus-visible {
+    outline: 3px solid rgba(40, 128, 18, 0.35);
+    outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+    .ferramentas-navegacao {
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
-    .botao-criar-evento:hover {
-        background-color: #20660e;
+    .ferramentas-navegacao .voltar-para-hoje {
+        margin-left: auto;
+    }
+
+    .ferramentas-navegacao .botao-criar-evento {
+        margin-left: 0;
     }
 }

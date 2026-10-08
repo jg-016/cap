@@ -77,10 +77,34 @@ class AtualizarTurmaTests(TestCase):
 
         self.assertContains(response, '<dialog')
         self.assertContains(response, 'data-abrir-modal="modal-atualizar-turma"')
+        self.assertContains(response, 'id="modal-associar-calendario-turma"')
+        self.assertContains(response, 'id="modal-criar-calendario-turma"')
+        self.assertContains(response, 'data-abrir-modal="modal-associar-calendario-turma"')
+        self.assertContains(response, 'data-abrir-modal="modal-criar-calendario-turma"')
         self.assertContains(
             response,
             reverse('atualizar_turma', args=[self.turma.id]),
         )
+
+    def test_pagina_da_turma_exibe_modal_de_confirmacao_para_remover_calendario(self):
+        self.client.force_login(self.admin)
+        calendario = Calendario.objects.create(
+            nome='Calendário compartilhado',
+            descricao='Calendário da turma',
+            turma=self.turma,
+        )
+        MembroDeCalendario.objects.create(
+            usuario=self.admin,
+            calendario=calendario,
+            eh_admin=True,
+            numero_paleta=3,
+        )
+
+        response = self.client.get(reverse('turma', args=[self.turma.id]))
+
+        self.assertContains(response, f'id="modal-remover-calendario-{calendario.id}"')
+        self.assertContains(response, f'data-abrir-modal="modal-remover-calendario-{calendario.id}"')
+        self.assertContains(response, 'O calendário e seus eventos não serão apagados.')
 
     def test_nome_vazio_nao_atualiza_turma_e_exibe_erro(self):
         self.client.force_login(self.admin)

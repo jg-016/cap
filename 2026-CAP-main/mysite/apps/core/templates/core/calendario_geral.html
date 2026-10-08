@@ -4,6 +4,7 @@
         <a href="{% url 'voltar_para_hoje' %}" class="voltar-para-hoje">Hoje</a>
         <a href="{% url 'semana_anterior' %}" class="icone-semana-anterior material-symbols-outlined">arrow_back_ios_new</a>
         <a href="{% url 'proxima_semana' %}" class="icone-proxima-semana material-symbols-outlined">arrow_forward_ios</a>
+        <button type="button" class="botao-criar-evento">+ Criar evento</button>
     </div>
     
     <div class="scroll-container">
@@ -57,8 +58,6 @@
             </div>
         </div>
     </div>
-    
-    <button type="button" class="botao-criar-evento">+ Criar evento</button>
     
     {% include 'eventos/modal_criar_evento.html' %}
 </div>

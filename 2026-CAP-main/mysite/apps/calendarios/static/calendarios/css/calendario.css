@@ -8,8 +8,17 @@
     margin-top: 20px;
 }
 
+.calendar-members__identity {
+    margin-top: 0;
+}
+
+.calendar-members__identity .topo--compact {
+    margin-top: 0;
+}
+
 .calendar-week-view {
-    margin-top: 24px;
+    min-width: 0;
+    margin-top: 14px;
 }
 
 .calendar-week-toolbar {
@@ -25,9 +34,14 @@
 
 .calendar-week-grid {
     display: grid;
-    grid-template-columns: 64px 1fr;
-    min-height: 720px;
+    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-rows: auto 750px;
+    min-width: 0;
+    height: min(72vh, 760px);
+    min-height: 460px;
     border: 1px solid #e5e7eb;
+    overflow: auto;
+    overscroll-behavior: contain;
 }
 
 .calendar-days {
@@ -70,6 +84,7 @@
 
 .calendar-day-column {
     position: relative;
+    height: 750px;
     border-left: 1px solid #e5e7eb;
 }
 
@@ -85,6 +100,10 @@
     background: #a8d8ea;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.calendar-members__lists {
+    margin-top: 22px;
 }
 
 main .topo {

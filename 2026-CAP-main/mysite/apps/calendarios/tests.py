@@ -41,6 +41,11 @@ class CalendarioViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'calendar-week-view')
         self.assertContains(response, evento.nome)
+        page = response.content.decode()
+        self.assertLess(
+            page.index('calendar-members__identity'),
+            page.index('calendar-week-view'),
+        )
 
     def test_criar_evento_redireciona_para_o_calendario(self):
         self.client.force_login(self.usuario)

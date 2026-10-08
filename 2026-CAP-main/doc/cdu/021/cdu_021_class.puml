@@ -1,79 +1,50 @@
 @startuml CDU_021_Adicionar_Calendario_a_Turma
-left to right direction
+top to bottom direction
 skinparam monochrome true
 skinparam shadowing false
 skinparam classAttributeIconSize 0
+title CDU-021 — Classes de projeto
 
-package "Interface" {
-  class "turmas/turma.html" as TurmaTemplate <<template>> {
-    formulário criar calendário
-    formulário associar calendário existente
-    lista de calendários da turma
+class Estudante
+
+package "Controle" {
+  class adicionar_calendario <<view>> {
+    +post(request, turma_id, calendario_id)
   }
 }
 
-package "Aplicação Django" {
-  class "apps.turmas.views" as TurmaViews <<view module>> {
-    turma(request, id)
-    adicionar_calendario_turma(request, turma_id, calendario_id?)
+package "Domínio" {
+  class Usuario {
+    -email: str
+    -nome_completo: str
   }
 
-  class "apps.turmas.urls" as TurmaUrls <<URLconf>> {
-    turma/<id>
-    criar_calendario_turma/<turma_id>
-    adicionar_calendario/<turma_id>
-    adicionar_calendario/<turma_id>/<calendario_id>
-  }
-}
-
-package "Modelos" {
-  class Usuario <<model>>
-
-  class Turma <<model>> {
-    nome: CharField(100)
-    descricao: CharField(500)
-    codigo: CharField(6)
+  class Turma {
+    -nome: str
+    -descricao: str
+    -codigo: str
   }
 
-  class MembroDeTurma <<model>> {
-    eh_admin: Boolean
-    numero_paleta: PositiveInteger
+  class MembroDeTurma {
+    -eh_admin: bool
+    -numero_paleta: int
   }
 
-  class Calendario <<model>> {
-    nome: CharField(100)
-    descricao: CharField(500)
-    turma: ForeignKey(Turma, null)
-  }
-
-  class MembroDeCalendario <<model>> {
-    eh_admin: Boolean
-    numero_paleta: PositiveInteger
+  class Calendario {
+    -nome: str
+    -descricao: str
+    -turma: Turma?
+    +save()
   }
 }
 
-TurmaTemplate ..> TurmaViews : envia formulários
-TurmaViews ..> Turma : busca turma
-TurmaViews ..> MembroDeTurma : verifica permissão de admin
-TurmaViews ..> Calendario : cria ou associa
-TurmaViews ..> MembroDeCalendario : inclui membros da turma
-TurmaUrls ..> TurmaViews : roteia requisições
+Estudante ..> adicionar_calendario : envia dados
+adicionar_calendario ..> Turma : consulta
+adicionar_calendario ..> MembroDeTurma : valida permissão
+adicionar_calendario ..> Calendario : associa e salva
 
 Usuario "1" -- "0..*" MembroDeTurma
 Turma "1" -- "0..*" MembroDeTurma
-Turma "0..1" -- "0..*" Calendario : turma
-Usuario "1" -- "0..*" MembroDeCalendario
-Calendario "1" -- "0..*" MembroDeCalendario
+Turma "1" -- "0..*" Calendario : possui
 
-note bottom of TurmaViews
-  Somente administrador da turma pode criar
-  ou associar calendário. Quando associa
-  calendário existente, ele não pode estar
-  vinculado a outra turma.
-end note
-
-note bottom of MembroDeCalendario
-  Os membros da turma são adicionados ao
-  calendário, caso ainda não sejam membros.
-end note
 @enduml

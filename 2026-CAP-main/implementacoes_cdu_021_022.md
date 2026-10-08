@@ -264,3 +264,128 @@ Esse padrão garante:
 - criação segura de usuários comuns e administradores;
 - compatibilidade com o modelo de usuário do projeto.
 
+## 8) Organização do botão "Criar evento"
+
+O botão foi movido para a barra de navegação do calendário, ao lado dos controles de semana, e recebeu dimensões compactas, estilo consistente, estado de foco visível e ajuste responsivo para telas estreitas.
+
+Arquivos:
+- `mysite/apps/core/templates/core/calendario_geral.html`
+- `mysite/apps/core/static/core/css/calendario_geral.css`
+
+Trecho do template:
+
+```django
+<div class="ferramentas-navegacao">
+    <h2 class="mes-em-foco">{{ calendario_geral.mes }} {{ calendario_geral.ano }}</h2>
+    <a href="{% url 'voltar_para_hoje' %}" class="voltar-para-hoje">Hoje</a>
+    <a href="{% url 'semana_anterior' %}" class="icone-semana-anterior material-symbols-outlined">arrow_back_ios_new</a>
+    <a href="{% url 'proxima_semana' %}" class="icone-proxima-semana material-symbols-outlined">arrow_forward_ios</a>
+    <button type="button" class="botao-criar-evento">+ Criar evento</button>
+</div>
+```
+
+Estilos do botão:
+
+```css
+.ferramentas-navegacao .botao-criar-evento {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 36px;
+    margin-left: 12px;
+    padding: 7px 14px;
+    border: 0;
+    border-radius: 10px;
+    background-color: #288012;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.ferramentas-navegacao .botao-criar-evento:hover {
+    background-color: #20660e;
+}
+```
+
+## 9) Correção de eventos sobrepostos à lista de membros
+
+Ao abrir um calendário existente associado a uma turma, eventos apareciam visualmente sobre as listas de líderes e membros. A grade tinha linhas de 30 px por hora, mas o posicionamento e a altura dos eventos usavam 60 px por hora. Agora os eventos usam a mesma escala vertical da grade.
+
+Arquivo: `mysite/apps/calendarios/templates/calendarios/calendario.html`
+
+```javascript
+const PIXELS_PER_HOUR = 30;
+
+block.style.top = `${event.start * PIXELS_PER_HOUR}px`;
+block.style.height = `${(event.end - event.start) * PIXELS_PER_HOUR}px`;
+```
+
+## 10) Organização dos calendários e ações na página da turma
+
+A seção “Calendários da turma” passou a ser um painel organizado com botões para associar calendário existente e criar calendário. Os calendários vinculados são exibidos em cartões com indicador de cor e ação de remoção. Em telas estreitas, o painel reorganiza os botões e cartões em uma coluna.
+
+As ações administrativas agora abrem diálogos popup no padrão nativo `<dialog>` do projeto:
+- **Associar calendário** abre um formulário de seleção.
+- **Criar calendário** abre um formulário de nome e descrição.
+- **Remover** abre confirmação por calendário; a confirmação esclarece que o calendário e os eventos não serão excluídos.
+
+Arquivos:
+- Template e diálogos: `mysite/apps/turmas/templates/turmas/turma.html`
+- Estilos: `mysite/apps/turmas/static/turmas/css/calendarios_turma.css`
+- Abertura e fechamento dos diálogos: `mysite/apps/turmas/static/turmas/js/modal_calendarios_turma.js`
+
+Botões que abrem os popups:
+
+```django
+<button type="button" data-abrir-modal="modal-associar-calendario-turma">
+    Associar calendário
+</button>
+<button type="button" data-abrir-modal="modal-criar-calendario-turma">
+    Criar calendário
+</button>
+```
+
+Cada cartão abre uma confirmação associada ao calendário correspondente:
+
+```django
+<button
+    type="button"
+    data-abrir-modal="modal-remover-calendario-{{ calendario.id }}"
+>
+    Remover
+</button>
+```
+
+O JavaScript usa o identificador dos botões dentro do painel para abrir o `<dialog>` correspondente e fecha o popup pelos botões de cancelar/fechar ou pelo clique no backdrop. Esse escopo mantém separado o modal de edição da turma. Os formulários mantêm os endpoints POST existentes e incluem proteção CSRF.
+
+### Compactação visual do painel
+
+O painel foi compactado reduzindo margens, espaçamento, tamanho do título, botões e cartões. Foram removidas as frases auxiliares em cinza do cabeçalho e os avisos cinza para lista vazia ou ausência de calendários pessoais disponíveis.
+
+### Ajustes no popup e destaque do calendário
+
+O popup de associação ficou um pouco mais largo, com `box-sizing: border-box` e o `select` limitado à largura interna disponível para evitar que o controle ultrapasse o popup. Na página da turma, o calendário agora fica dentro de um painel com borda, fundo e toolbar destacados, dando maior hierarquia visual à agenda.
+
+Arquivo de estilos: `mysite/apps/turmas/static/turmas/css/calendarios_turma.css`.
+
+O formulário de associação também usa uma coluna CSS `minmax(0, 1fr)`, e o campo do select tem `min-width: 0`, `max-width: 100%` e `width: 100%` para conter a largura intrínseca do controle dentro do popup.
+
+## 11) Rolagem e hierarquia visual dos calendários
+
+O layout global agora mantém a rolagem do menu lateral independente da área principal; a área principal rola verticalmente e evita overflow horizontal. A grade semanal tem uma área rolável delimitada, e o calendário compartilhado pelas páginas de turma tem altura máxima relativa à janela, permitindo rolar a grade sem deslocar o menu lateral.
+
+Nas páginas de calendário, o título, a turma associada e a descrição foram movidos para antes da grade semanal para ficarem visíveis no topo, em vez de aparecerem depois de toda a grade. Como o calendário geral é incluído pelo mesmo template em todas as turmas, o ajuste do calendário de turma aplica-se a todas elas.
+
+Arquivos principais:
+- `mysite/apps/core/static/core/css/base.css`
+- `mysite/apps/core/static/core/css/menu_lateral.css`
+- `mysite/apps/core/static/core/css/calendario_geral.css`
+- `mysite/apps/turmas/static/turmas/css/calendarios_turma.css`
+- `mysite/apps/calendarios/static/calendarios/css/calendario.css`
+- `mysite/apps/calendarios/templates/calendarios/calendario.html`

@@ -49,59 +49,6 @@ main {
         margin-bottom: 20px;
         font-size: 1.05rem;
     }
-    .bloco-calendarios-turma {
-        margin-top: 20px;
-    }
-    .bloco-calendarios-turma h2 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-    }
-    .form-adicionar-calendario,
-    .form-criar-calendario-turma {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        margin-bottom: 18px;
-    }
-    .form-adicionar-calendario label,
-    .form-criar-calendario-turma label {
-        font-weight: 600;
-        margin-right: 8px;
-    }
-    .form-adicionar-calendario select,
-    .form-criar-calendario-turma input,
-    .form-criar-calendario-turma textarea {
-        padding: 8px 10px;
-        border: 1px solid #d0d0d0;
-        border-radius: 8px;
-        background: #fff;
-    }
-    .form-adicionar-calendario button,
-    .form-criar-calendario-turma button {
-        padding: 10px 14px;
-        border: 0;
-        border-radius: 8px;
-        background: #e5e7eb;
-        color: #111827;
-        cursor: pointer;
-        font-weight: 600;
-    }
-    .lista-calendarios-turma {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 16px;
-    }
-    .lista-calendarios-turma li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        border-bottom: 1px solid #d0d0d0;
-        padding-bottom: 10px;
-    }
     .turma-mensagem {
         margin: 12px 0;
         padding: 10px 12px;
