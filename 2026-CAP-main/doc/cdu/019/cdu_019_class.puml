@@ -1,0 +1,42 @@
+@startuml CDU_019_Atualizar_Turma
+top to bottom direction
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+title CDU-019 — Classes de projeto
+
+class Estudante
+
+package "Controle" {
+  class atualizar_turma <<view>> {
+    +atualizar_turma(request, id)
+  }
+}
+
+package "Domínio" {
+  class Usuario {
+    -email: str
+    -nome_completo: str
+  }
+
+  class Turma {
+    -nome: str
+    -descricao: str
+    -codigo: str
+    +save()
+  }
+
+  class MembroDeTurma {
+    -eh_admin: bool
+    -numero_paleta: int
+  }
+}
+
+Estudante ..> atualizar_turma : envia dados
+atualizar_turma ..> Turma : consulta e atualiza
+atualizar_turma ..> MembroDeTurma : valida permissão
+
+Usuario "1" -- "0..*" MembroDeTurma
+Turma "1" -- "1..*" MembroDeTurma
+
+@enduml
