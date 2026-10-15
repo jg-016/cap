@@ -54,7 +54,9 @@ class EventoViewTests(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, self.evento.nome)
 		self.assertContains(response, self.evento.conteudo)
-		self.assertContains(response, '<dialog')
+		self.assertContains(response, 'Voltar ao calendário geral')
+		self.assertNotContains(response, 'modal-deletar-evento')
+		self.assertNotContains(response, 'Excluir calendário')
 		self.assertContains(
 			response,
 			reverse('eventos:deletar_evento', args=[self.evento.id]),
