@@ -1,0 +1,25 @@
+@startuml diagrama_interacoes
+title CDU-026 - Entrar em turma
+
+skinparam maxMessageSize 220
+
+actor Estudante
+control "turmas.views" as View
+entity Turma
+entity MembroDeTurma
+entity MembroDeCalendario
+boundary "entrar_turma.html" as Tela
+
+Estudante -> View : GET /turmas/entrar
+View -> Tela : render(formulário do código)
+Estudante -> View : POST /turmas/entrar (codigo)
+View -> Turma : get(codigo=codigo) → turma
+View -> MembroDeTurma : filter(usuario, turma).exists() → False
+View -> Tela : render(turma, calendários)
+Estudante -> View : POST /turmas/entrar/<id> (calendários)
+View -> View : adicionar_membro_turma(usuario, turma, calendarios)
+View -> MembroDeTurma : create(eh_admin=False, numero_paleta)
+View -> MembroDeCalendario : create(...) para cada calendário
+View --> Estudante : redirect('turma', turma.id)
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml diagrama_classes_projeto
+title CDU-023 - Classes de projeto
+
+skinparam classAttributeIconSize 0
+hide empty members
+
+class "turma.html\npainel_membros.html" as Tela <<boundary>>
+
+class "turmas.views" as Views <<control>> {
+    +turma(request, id)
+}
+
+class "turmas.utils" as Utils <<control>> {
+    +obter_participantes_turma(turma): dict
+}
+
+class Turma <<entity>> {
+    {field} +nome: CharField(100)
+}
+
+class MembroDeTurma <<entity>> {
+    {field} +eh_admin: BooleanField
+}
+
+class Usuario <<entity>> {
+    {field} +nome_completo: CharField(100)
+    {field} +email: EmailField
+}
+
+Views ..> Tela : render()
+Views ..> Utils : obter_participantes_turma()
+Utils ..> MembroDeTurma : filter(turma)
+
+Turma "1" -- "0..*" MembroDeTurma
+Usuario "1" -- "0..*" MembroDeTurma
+
+@enduml

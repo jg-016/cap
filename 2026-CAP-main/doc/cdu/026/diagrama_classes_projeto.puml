@@ -1,0 +1,53 @@
+@startuml diagrama_classes_projeto
+title CDU-026 - Classes de projeto
+
+skinparam classAttributeIconSize 0
+hide empty members
+
+class "entrar_turma.html" as Tela <<boundary>>
+
+class "turmas.views" as Views <<control>> {
+    +entrar_turma(request)
+    +confirmar_entrada_turma(request, id)
+}
+
+class "turmas.utils" as Utils <<control>> {
+    +adicionar_membro_turma(usuario, turma, calendarios)
+}
+
+class Turma <<entity>> {
+    {field} +nome: CharField(100)
+    {field} +codigo: CharField(6)
+}
+
+class MembroDeTurma <<entity>> {
+    {field} +eh_admin: BooleanField
+    {field} +numero_paleta: PositiveIntegerField
+}
+
+class Usuario <<entity>> {
+    +paleta_menos_usada(): int
+}
+
+class Calendario <<entity>> {
+    {field} +nome: CharField(100)
+}
+
+class MembroDeCalendario <<entity>> {
+    {field} +eh_admin: BooleanField
+    {field} +numero_paleta: PositiveIntegerField
+}
+
+Views ..> Tela : render()
+Views ..> Turma : get(codigo)
+Views ..> Utils : adicionar_membro_turma()
+Utils ..> MembroDeTurma : create()
+Utils ..> MembroDeCalendario : create()
+
+Turma "1" -- "0..*" MembroDeTurma
+Usuario "1" -- "0..*" MembroDeTurma
+Turma "0..1" -- "0..*" Calendario : calendarios
+Calendario "1" -- "0..*" MembroDeCalendario
+Usuario "1" -- "0..*" MembroDeCalendario
+
+@enduml

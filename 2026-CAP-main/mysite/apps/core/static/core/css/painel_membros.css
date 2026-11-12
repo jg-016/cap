@@ -1,0 +1,31 @@
+#painel-membros {
+    h2 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-block: 16px 8px;
+    }
+    .lista-membros {
+        border: 1px solid var(--cor-borda);
+        border-radius: var(--raio);
+        overflow: hidden;
+    }
+    .membro {
+        height: 44px;
+        padding-inline: 14px;
+        border-bottom: 1px solid var(--cor-borda);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color .15s;
+    }
+    .membro:last-child {
+        border-bottom: 0;
+    }
+    .membro:hover {
+        background-color: var(--cor-suave, var(--cor-de-fundo-2));
+    }
+    .icone-email {
+        font-size: 20px;
+        color: var(--cor-de-fonte-2);
+    }
+}

@@ -1,0 +1,18 @@
+@startuml diagrama_interacoes
+title CDU-023 - Consultar participantes de turma
+
+skinparam maxMessageSize 220
+
+actor Estudante
+control "turmas.views.turma" as View
+entity MembroDeTurma
+boundary "turma.html" as Tela
+
+Estudante -> View : GET /turmas/<id>
+View -> View : obter_participantes_turma(turma)\n→ líderes e colegas
+View -> MembroDeTurma : filter(turma=turma) → membros
+View -> Tela : render(context)
+Estudante -> Tela : seleciona a aba "Membros"
+Tela --> Estudante : exibe líderes e colegas
+
+@enduml

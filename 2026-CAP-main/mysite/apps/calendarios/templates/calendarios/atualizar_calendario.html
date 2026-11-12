@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Editar {{ calendario.nome }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'calendarios/css/atualizar_calendario.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="formulario-calendario paleta-{{ paleta }}" aria-labelledby="formulario-calendario-titulo">
+    <h1 id="formulario-calendario-titulo">Editar calendário</h1>
+    <p>Atualize o nome e a descrição do calendário.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="formulario-calendario__campo">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="formulario-calendario__erros" role="alert">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+            <ul class="formulario-calendario__erros" role="alert">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="formulario-calendario__acoes">
+            <a href="{% url 'calendario' calendario.id %}">Cancelar</a>
+            <button type="submit">Salvar alterações</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

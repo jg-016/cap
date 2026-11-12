@@ -1,0 +1,33 @@
+{% load static %}
+
+{% block css_painel_membros %}
+    <link rel="stylesheet" href="{% static 'core/css/painel_membros.css' %}">
+{% endblock %}
+
+<div id="painel-membros">
+    <h2>Líderes</h2>
+
+    {% if painel_membros.lideres %}
+        <ul class="lista-membros">
+            {% for membro in painel_membros.lideres %}
+                <li class="membro">
+                    <p class="nome-membro">{{ membro.nome }}</p>
+                    <span class="icone-email material-symbols-outlined">mail</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Colegas de turma</h2>
+
+    {% if painel_membros.colegas %}
+        <ul class="lista-membros">
+            {% for membro in painel_membros.colegas %}
+                <li class="membro">
+                    <p class="nome-membro">{{ membro.nome }}</p>
+                    <span class="icone-email material-symbols-outlined">mail</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>

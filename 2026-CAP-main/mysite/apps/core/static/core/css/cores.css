@@ -1,0 +1,84 @@
+:root {
+    --cor-de-fundo-1: #FFFFFF;
+    --cor-de-fundo-2: #F6F6F6;
+    --cor-de-fundo-3: #E6E6E6;
+    --cor-de-fundo-4: #B6B6B6;
+
+    --cor-de-fonte-1: #000000;
+    --cor-de-fonte-2: #717070;
+
+    --cor-borda: var(--cor-de-fundo-3);
+    --raio: 8px;
+    --raio-modal: 10px;
+    --sombra-modal: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+/* Hover neutro no estilo do Notion. */
+:root {
+    --cor-hover: rgba(55, 53, 47, 0.08);
+    --cor-pressionado: rgba(55, 53, 47, 0.16);
+}
+[class*="paleta-"] {
+    --cor-suave: var(--cor-hover);
+}
+/*
+Paleta original (para reverter): clara / media / escura
+    1: #FF6366 / #D61212 / #A60000
+    2: #FFBC82 / #F28C33 / #BD6E28
+    3: #77EF72 / #10B70A / #1E681C
+    4: #6B97FF / #1D61FF / #0033A9
+    5: #7eecff / #5DE7FF / #25A6BC
+    6: #B58AF2 / #8545D6 / #5100A8
+    7: #EC8DFF / #D820FD / #9B1AB5
+*/
+/*
+Paleta anterior (para reverter): clara / media / escura
+    1: #FFA098 / #E9504D / #9B0F1B
+    2: #FFBC82 / #EA7E28 / #B05E1C
+    3: #95D891 / #35B535 / #07620B
+    4: #7EA9FE / #4B85FE / #204FB5
+    5: #7eecff / #22C4E0 / #12879B
+    6: #C9ACFF / #A06AEC / #6331A0
+    7: #EC8DFF / #DA2EFC / #A021BA
+*/
+.paleta-1 {
+    --cor-clara: #FA8B83;
+    --cor-media: #E9504D;
+    --cor-escura: #9B0F1B;
+    --cor-gradiente: #950E4F;
+}
+.paleta-2 {
+    --cor-clara: #FAAB6C;
+    --cor-media: #EA7E28;
+    --cor-escura: #B05E1C;
+    --cor-gradiente: #B75549;
+}
+.paleta-3 {
+    --cor-clara: #7ECE7A;
+    --cor-media: #35B535;
+    --cor-escura: #07620B;
+    --cor-gradiente: #015F4A;
+}
+.paleta-4 {
+    --cor-clara: #709FFE;
+    --cor-media: #4B85FE;
+    --cor-escura: #204FB5;
+    --cor-gradiente: #583FAF;
+}
+.paleta-5 {
+    --cor-clara: #6AE1F6;
+    --cor-media: #22C4E0;
+    --cor-escura: #12879B;
+    --cor-gradiente: #3D7FAD;
+}
+.paleta-6 {
+    --cor-clara: #BD9AFA;
+    --cor-media: #A06AEC;
+    --cor-escura: #6331A0;
+    --cor-gradiente: #7E2284;
+}
+.paleta-7 {
+    --cor-clara: #E778FF;
+    --cor-media: #DA2EFC;
+    --cor-escura: #A021BA;
+    --cor-gradiente: #793ADD;
+}

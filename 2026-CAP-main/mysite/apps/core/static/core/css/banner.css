@@ -1,0 +1,162 @@
+/* Banner de capa das páginas de turma e de calendário, com as abas (submenu) dentro dele. */
+
+main .banner {
+    position: relative;
+    flex-shrink: 0;
+    min-height: 104px;
+    margin-bottom: 16px;
+    padding: 18px 28px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: var(--raio-modal);
+    color: #fff;
+    container-type: inline-size;
+    background:
+        radial-gradient(circle at 88% -20%, rgba(255, 255, 255, 0.18) 0 90px, transparent 91px),
+        radial-gradient(circle at 72% 130%, rgba(255, 255, 255, 0.10) 0 120px, transparent 121px),
+        linear-gradient(135deg, var(--cor-media), var(--cor-gradiente));
+
+    /* Sem abas: o título fica na mesma altura que nos banners com abas. */
+    &.banner--sem-abas {
+        justify-content: flex-start;
+    }
+
+    .banner__titulo {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    /* Linha das abas; a etiqueta (código da turma ou turma do calendário) fica à direita dela. */
+    .banner__rodape {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .banner__etiqueta {
+        flex-shrink: 1;
+        min-width: 0;
+        margin-left: auto;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background-color: rgba(255, 255, 255, 0.18);
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .banner__etiqueta .material-symbols-outlined {
+        font-size: 18px;
+    }
+    a.banner__etiqueta:hover {
+        background-color: rgba(255, 255, 255, 0.28);
+    }
+    .banner__codigo {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-weight: 600;
+        letter-spacing: .05em;
+        user-select: all;
+    }
+    .banner__copiar {
+        display: grid;
+        place-items: center;
+        padding: 2px;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+    }
+    .banner__copiar:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    .banner__copiar .material-symbols-outlined {
+        font-size: 16px;
+    }
+    /* Banner estreito: esconde o rótulo para o código e o botão de copiar caberem ao lado das abas. */
+    @container (max-width: 560px) {
+        .banner__rotulo {
+            display: none;
+        }
+    }
+    .banner__copiar.copiado {
+        padding-inline: 6px;
+        font-size: 12px;
+    }
+
+    .banner__acoes {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        display: flex;
+        gap: 4px;
+    }
+    .banner__acao {
+        padding: 6px;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: #fff;
+        opacity: .85;
+        cursor: pointer;
+        transition: opacity .15s, background-color .15s;
+    }
+    .banner__acao * {
+        font-size: 24px;
+    }
+    .banner__acao:hover {
+        opacity: 1;
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Abas (submenu.js): encostadas na base do banner. */
+    .submenu {
+        flex-shrink: 0;
+        margin: 6px 0 0 -16px;
+        display: flex;
+        justify-content: flex-start;
+        gap: 4px;
+
+        li {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 16px 12px;
+            border-radius: var(--raio) var(--raio) 0 0;
+            color: rgba(255, 255, 255, 0.8);
+            transition: background-color .15s, color .15s;
+        }
+        li:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        li:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: -2px;
+        }
+        li.ativo {
+            color: #fff;
+            font-weight: 600;
+        }
+        li.ativo::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 0;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background-color: #fff;
+        }
+    }
+}

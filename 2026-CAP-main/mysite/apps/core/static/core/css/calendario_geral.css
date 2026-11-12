@@ -1,0 +1,189 @@
+.calendario-geral {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.ferramentas-navegacao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+
+    .mes-em-foco {
+        font-size: 20px;
+    }
+    .voltar-para-hoje {
+        margin-left: auto;
+        border-width: 0px;
+        border-radius: 10px;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 15px;
+        background-color: var(--cor-de-fundo-3);
+    }
+    .icone-semana-anterior,
+    .icone-proxima-semana {
+        font-size: 22px;
+    }
+
+    .botao-criar-evento {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        min-height: 36px;
+        margin-left: 4px;
+        padding: 7px 14px;
+        border: 0;
+        border-radius: var(--raio);
+        background-color: var(--cor-escura, #333);
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .botao-criar-evento:hover {
+        filter: brightness(0.9);
+    }
+}
+
+.scroll-container {
+    min-height: 0;
+    overflow: auto;
+    width: 100%;
+    flex: 1 1 auto;
+    overscroll-behavior: contain;
+}
+
+.calendario-geral-2 {
+    --width-coluna-1: 40px;
+    --height-fileira-1: 10px;
+    --height-horario: 15px;
+
+    font-size: 12px;
+
+    display: grid;
+    grid-template-columns: var(--width-coluna-1) max(1200px, calc(100% - var(--width-coluna-1)));
+    grid-template-rows: var(--height-fileira-1) max(2000px, calc(100% - var(--height-fileira-1)));
+    grid-template-areas: 
+    '.        datas'
+    'horarios grade';
+
+    .datas {grid-area: datas}
+    .horarios {grid-area: horarios}
+    .grade-eventos {grid-area: grade}
+
+    .datas {
+        display: flex;
+        align-items: center;
+
+        * {
+            flex: 1;
+            text-align: center;
+        }
+    }
+    .horarios {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        * {
+            height: var(--height-horario);
+        }
+    }
+    .grade-eventos {
+        position: relative
+    }
+    .colunas-datas {
+        display: flex;
+        position: absolute;
+        inset: 0;
+
+        * {
+            flex: 1;
+            padding: calc(var(--height-horario) / 2) 0;
+            border-left: 1px solid #C0C0C0;
+        }
+    }
+    .linhas-horizontais {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .container-linha-horizontal {
+            height: var(--height-horario);
+            display: flex;
+            align-items: center;
+        }
+        .linha-horizontal {
+            width: 100%;
+            height: 1px;
+            border-top: 1px solid #C0C0C0
+        }
+    }
+    .eventos-calendario {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        pointer-events: none;
+    }
+    .evento-calendario {
+        padding: 1.5px 0;
+        position: absolute;
+        text-decoration: none;
+        pointer-events: auto;
+        top: 0;
+        left: 0;
+        height: 0;
+    }
+    /* Estilo de eventos do Notion: fundo claro derivado da cor, texto escuro e faixa lateral. */
+    .conteudo-evento {
+        height: 100%;
+        width: 100%;
+        padding: 6px 8px 6px 7px;
+        background-color: color-mix(in srgb, var(--cor-media) 16%, #fff);
+        border-left: 3px solid var(--cor-media);
+        border-radius: 4px;
+        color: color-mix(in srgb, var(--cor-escura) 70%, #000);
+        overflow: hidden;
+        font-size: 13px;
+        transition: background-color .1s;
+    }
+    .conteudo-evento:hover {
+        background-color: color-mix(in srgb, var(--cor-media) 26%, #fff);
+    }
+    .evento-titulo {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+    .evento-horario {
+        font-size: 10px;
+        opacity: .7;
+    }
+}
+
+@media (max-width: 600px) {
+    .ferramentas-navegacao {
+        flex-wrap: wrap;
+    }
+
+    .ferramentas-navegacao .mes-em-foco {
+        flex: 1 0 100%;
+    }
+
+    .ferramentas-navegacao .voltar-para-hoje {
+        margin-left: 0;
+    }
+
+    .ferramentas-navegacao .botao-criar-evento {
+        margin-left: auto;
+    }
+}

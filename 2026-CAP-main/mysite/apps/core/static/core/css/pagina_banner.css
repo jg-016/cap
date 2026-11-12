@@ -1,0 +1,33 @@
+/* Layout comum das páginas com banner (turma e calendário): contêiner e painel de eventos. */
+
+main .pagina-banner {
+    width: 100%;
+    max-width: 1100px;
+    margin-inline: auto;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.painel-eventos {
+    flex: 1;
+    min-height: 0;
+    padding: 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    background: var(--cor-de-fundo-2);
+}
+
+/* Sem afetar .oculto, que esconde o painel quando outra aba está ativa. */
+.painel-eventos:not(.oculto) {
+    display: flex;
+    flex-direction: column;
+}
+
+.painel-eventos .ferramentas-navegacao {
+    padding: 8px 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    background: var(--cor-de-fundo-1);
+}

@@ -1,0 +1,215 @@
+/* Tudo com prefixo .evt- para não conflitar com os outros CSS do site. */
+
+.evt-modal {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(32rem, calc(100% - 2rem));
+    max-height: calc(100vh - 2rem);
+    padding: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    color: #1f2937;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+}
+
+.evt-modal::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+}
+
+.evt-modal[open] {
+    animation: evt-entrada 0.14s ease-out;
+}
+
+@keyframes evt-entrada {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .evt-modal[open] { animation: none; }
+}
+
+.evt-modal [hidden] { display: none !important; }
+
+.evt-painel {
+    display: block;
+    padding: 1.5rem;
+}
+
+/* ---------- Cabeçalho ---------- */
+.evt-cab {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.evt-cab__texto { min-width: 0; }
+
+.evt-calendario {
+    margin: 0 0 0.35rem;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.evt-titulo {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    color: #111827;
+    overflow-wrap: anywhere;
+}
+
+.evt-x {
+    margin: -0.4rem -0.5rem 0 0;
+    padding: 0.25rem 0.55rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.evt-x:hover { background: #f3f4f6; color: #111827; }
+
+/* ---------- Visualização ---------- */
+.evt-resumo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    margin: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #e5e7eb;
+    overflow: hidden;
+}
+
+.evt-resumo > div { padding: 0.8rem 1rem; background: #f9fafb; }
+
+.evt-resumo dt { font-size: 0.78rem; color: #6b7280; }
+.evt-resumo dd { margin: 0.2rem 0 0; font-size: 0.95rem; font-weight: 600; }
+
+.evt-descricao { margin-top: 1.25rem; }
+
+.evt-descricao h3 {
+    margin: 0 0 0.4rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.evt-descricao p {
+    margin: 0;
+    min-height: 3rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Formulário ---------- */
+.evt-campo { margin-bottom: 1rem; }
+.evt-campo:last-of-type { margin-bottom: 0; }
+
+.evt-campo label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.evt-campo input,
+.evt-campo textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    color: #111827;
+    font: inherit;
+    font-size: 0.92rem;
+}
+
+.evt-campo textarea { resize: none; line-height: 1.5; }
+
+.evt-campo input:focus,
+.evt-campo textarea:focus {
+    outline: none;
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.12);
+}
+
+.evt-linha {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.evt-linha .evt-campo { margin-bottom: 0; }
+
+@media (min-width: 560px) {
+    .evt-linha { grid-template-columns: 1.4fr 1fr 1fr; }
+}
+
+.evt-erro {
+    margin: 0.35rem 0 0;
+    font-size: 0.8rem;
+    color: #b91c1c;
+}
+
+.evt-erro--geral {
+    margin: 0 0 1rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    background: #fef2f2;
+}
+
+/* ---------- Rodapé e botões ---------- */
+.evt-rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 1.5rem -1.5rem -1.5rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.evt-rodape--direita { justify-content: flex-end; }
+
+.evt-btn {
+    width: auto;
+    margin: 0;
+    padding: 0.6rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.evt-btn:focus-visible,
+.evt-x:focus-visible {
+    outline: 2px solid #111827;
+    outline-offset: 2px;
+}
+
+.evt-btn--principal { background: #111827; color: #fff; }
+.evt-btn--principal:hover { background: #374151; }
+.evt-btn--principal:disabled { opacity: 0.6; cursor: wait; }
+
+.evt-btn--borda { border-color: #d1d5db; background: #fff; color: #374151; }
+.evt-btn--borda:hover { background: #f3f4f6; }
+.evt-btn--texto { background: transparent; color: #4b5563; }
+.evt-btn--texto:hover { background: #e5e7eb; color: #111827; }

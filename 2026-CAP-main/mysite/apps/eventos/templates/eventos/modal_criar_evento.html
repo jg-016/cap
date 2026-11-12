@@ -1,0 +1,109 @@
+{% load static %}
+
+<div id="eventModal" class="modal-criar-evento">
+    <div class="modal-criar-evento-conteudo">
+
+        <h2>Criar Evento</h2>
+
+        <form method="post" action="{% url 'eventos:criar_evento' %}">
+            {% csrf_token %}
+
+            <label for="calendario">Calendario</label>
+
+            <div class="selecionar-calendario">
+                <input type="hidden" name="id-calendario" id="id-calendario" value="{{ calendarios.0.id }}">
+
+                <button type="button" class="calendario-selecionado">
+                    <div class="opcao-calendario selecionado">
+                        {% with primeiro=calendarios|first %}
+                            <div class="circulo paleta-{{ primeiro.paleta }}"></div>
+                            
+                            <div class="info-calendario">
+                                <p class="nome-calendario">{{ primeiro.nome }}</p>
+                                {% if primeiro.turma %}
+                                    <p class="nome-turma">{{ primeiro.turma }}</p>
+                                {% endif %}    
+                            </div>
+                            
+                            <div class="icone icone-abrir-opcoes-calendarios">
+                                <img src="{% static 'core/icones/chevron_down.svg' %}" alt="">
+                            </div>
+                        {% endwith %}
+                    </div>
+                </button>
+
+                <div class="opcoes-calendario oculto">
+                    {% for calendario in calendarios %}
+                        <div class="opcao-calendario" data-id-calendario="{{ calendario.id }}">
+                            <div class="circulo paleta-{{ calendario.paleta }}"></div>
+                            
+                            <div class="info-calendario">
+                                <p class="nome-calendario">{{ calendario.nome }}</p>
+                                {% if calendario.turma %}
+                                    <p class="nome-turma">{{ calendario.turma }}</p>
+                                {% endif %}    
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <label for="titulo">Título</label>
+            <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                placeholder="Digite o título do evento">
+
+            <label for="data">Data</label>
+            <input
+                type="date"
+                id="data"
+                name="data"
+                required>
+
+            <div class="horarios-evento">
+                <div>
+                    <label for="inicio">Início</label>
+                    <input
+                        type="time"
+                        id="inicio"
+                        name="inicio"
+                        required>
+                </div>
+
+                <div>
+                    <label for="fim">Fim</label>
+                    <input
+                        type="time"
+                        id="fim"
+                        name="fim"
+                        required>
+                </div>
+            </div>
+            <label for="descricao">Descrição</label>
+            <textarea
+                id="descricao"
+                name="descricao"
+                placeholder="Digite a descrição do evento (opcional)">
+            </textarea>
+
+            <div class="botoes-evento">
+
+                <button
+                    type="button"
+                    id="cancelBtn"
+                    class="botao-cancelar-evento">
+                    Cancelar
+                </button>
+                <button
+                    type="submit"
+                    class="botao-salvar-evento">
+                    Salvar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>

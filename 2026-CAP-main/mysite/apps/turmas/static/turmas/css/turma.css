@@ -1,0 +1,19 @@
+main {
+    .descricao {
+        margin-bottom: 20px;
+    }
+    .turma-mensagem {
+        margin: 12px 0;
+        padding: 10px 12px;
+        border-radius: 6px;
+    }
+    .turma-mensagem--error {
+        background: #fef2f2;
+        color: #991b1b;
+    }
+    .turma-mensagem--success {
+        background: #ecfdf5;
+        color: #065f46;
+    }
+    
+}

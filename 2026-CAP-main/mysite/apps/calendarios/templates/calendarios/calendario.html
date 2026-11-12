@@ -1,0 +1,184 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ calendario.nome }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/css/banner.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/pagina_banner.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/calendario_geral.css' %}">
+    <link rel="stylesheet" href="{% static 'eventos/css/modal_criar_evento.css' %}">
+    <link rel="stylesheet" href="{% static 'calendarios/css/atualizar_calendario.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="pagina-banner paleta-{{ usuario.paleta }}">
+    {% for message in messages %}
+        <p class="calendario-mensagem calendario-mensagem--{{ message.tags }}" role="status">
+            {{ message }}
+        </p>
+    {% endfor %}
+    <header class="banner{% if not calendario.turma %} banner--sem-abas{% endif %}">
+        {% if usuario.eh_admin %}
+            <div class="banner__acoes">
+                <a href="{% url 'atualizar_calendario' calendario.id %}" class="icone banner__acao" aria-label="Editar calendário">
+                    <span class="material-symbols-outlined">edit</span>
+                </a>
+                <a href="{% url 'deletar_calendario' calendario.id %}" class="icone banner__acao" aria-label="Excluir calendário">
+                    <span class="material-symbols-outlined">delete</span>
+                </a>
+            </div>
+        {% endif %}
+
+        <h1 class="banner__titulo">{{ calendario.nome }}</h1>
+
+        {% if calendario.turma %}
+            <div class="banner__rodape">
+                <ul class="submenu paleta-{{ usuario.paleta }}" role="tablist">
+                    <li role="tab" tabindex="0" data-id-painel="painel-eventos">Eventos</li>
+                    <li role="tab" tabindex="0" data-id-painel="painel-membros">Membros</li>
+                </ul>
+
+                <a href="{% url 'turma' calendario.turma.id %}" class="banner__etiqueta">
+                    <span class="material-symbols-outlined">groups</span>
+                    {{ calendario.turma }}
+                </a>
+            </div>
+        {% endif %}
+    </header>
+
+    <div id="painel-eventos" class="painel-eventos">
+        {% include 'core/calendario_geral.html' %}
+    </div>
+
+    {% if calendario.turma %}
+        {% include 'core/painel_membros.html' %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        window.calendarEvents = {{ eventos_json|default:'[]'|safe }};
+
+        const DAYS_PT = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+        const MONTHS_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+        let weekOffset = 0;
+        const BASE_DATE = new Date();
+        const PIXELS_PER_HOUR = 30;
+        BASE_DATE.setHours(0, 0, 0, 0);
+
+        function getWeekStart() {
+            const start = new Date(BASE_DATE);
+            const dayIndex = start.getDay();
+            const diffToSunday = (dayIndex + 1) % 7;
+            start.setDate(start.getDate() - diffToSunday + weekOffset * 7);
+            return start;
+        }
+        function formatHour(value) {
+            const hour = Math.floor(value);
+            const minute = Math.round((value - hour) * 60);
+            return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        }
+
+        function toISODate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function renderWeekView() {
+            const weekStart = getWeekStart();
+            const monthLabel = document.getElementById('calendar-month-label');
+            monthLabel.textContent = `${MONTHS_PT[weekStart.getMonth()]} ${weekStart.getFullYear()}`;
+            const daysContainer = document.getElementById('calendar-days');
+            daysContainer.innerHTML = '';
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + i);
+
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day-header';
+                dayElement.innerHTML = `<span>${DAYS_PT[date.getDay()]}</span><strong>${String(date.getDate()).padStart(2, '0')}</strong>`;
+                daysContainer.appendChild(dayElement);
+            }
+            const timeColumn = document.getElementById('calendar-times');
+            timeColumn.innerHTML = '';
+
+            for (let hour = 0; hour <= 24; hour++) {
+                const slot = document.createElement('div');
+                slot.className = 'calendar-time-slot';
+                const label = document.createElement('span');
+                label.textContent = `${String(hour).padStart(2, '0')}:00`;
+                slot.appendChild(label);
+                timeColumn.appendChild(slot);
+            }
+
+            const columns = document.getElementById('calendar-columns');
+            columns.innerHTML = '';
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + i);
+                const dateKey = toISODate(date);
+                const column = document.createElement('div');
+                column.className = 'calendar-day-column';
+
+                for (let hour = 0; hour <= 24; hour++) {
+                    const hourCell = document.createElement('div');
+                    hourCell.className = 'calendar-hour-cell';
+                    column.appendChild(hourCell);
+                }
+
+                const dayEvents = window.calendarEvents.filter((event) => event.date === dateKey);
+                dayEvents.forEach((event) => {
+                    const block = document.createElement('div');
+                    block.className = 'calendar-event-block';
+                    block.setAttribute('role', 'button');
+                    block.dataset.eventoId = event.id;
+                    block.tabIndex = 0;
+                    block.style.top = `${event.start * PIXELS_PER_HOUR}px`;
+                    block.style.height = `${(event.end - event.start) * PIXELS_PER_HOUR}px`;
+                    block.style.backgroundColor = event.color || '#A8D8EA';
+                    block.innerHTML = `
+                        <div class="calendar-event-title">${event.title}</div>
+                        <div class="calendar-event-time">${formatHour(event.start)} - ${formatHour(event.end)}</div>
+                    `;
+                    column.appendChild(block);
+                });
+
+                columns.appendChild(column);
+            }
+        }
+
+        // Event listener para o botão é agora gerenciado por gerenciador_modal_evento.js(o arquivo que gerencia quando o modal aparece e desaparece.)
+
+        document.addEventListener('click', function (event) {
+            const action = event.target.closest('[data-action]');
+            if (!action) {
+                return;
+            }
+            const selectedDate = getWeekStart();
+            if (action.dataset.action === 'today') {
+                weekOffset = 0;
+                renderWeekView();
+                return;
+            }
+            if (action.dataset.action === 'prev') {
+                weekOffset -= 1;
+                renderWeekView();
+                return;
+            }
+            if (action.dataset.action === 'next') {
+                weekOffset += 1;
+                renderWeekView();
+            }
+        });
+
+        renderWeekView();
+    </script>
+    {% if calendario.turma %}
+        <script src="{% static 'core/js/submenu.js' %}" defer></script>
+    {% endif %}
+{% endblock %}

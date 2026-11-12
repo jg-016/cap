@@ -1,0 +1,94 @@
+{% load static %}
+{# Inclua com {% include 'eventos/modal_detalhes_evento.html' %} na página do calendário. #}
+<link rel="stylesheet" href="{% static 'eventos/css/modal_detalhes_evento.css' %}">
+
+<dialog
+    class="evt-modal"
+    id="modal-detalhes-evento"
+    aria-labelledby="evt-titulo"
+    data-url-detalhes="{% url 'eventos:detalhes_evento' 0 %}"
+>
+    {# ---------- Modo visualização ---------- #}
+    <section class="evt-painel" data-painel="visualizar">
+        <header class="evt-cab">
+            <div class="evt-cab__texto">
+                <p class="evt-calendario" data-campo="calendario"></p>
+                <h2 class="evt-titulo" id="evt-titulo" data-campo="titulo"></h2>
+            </div>
+            <button type="button" class="evt-x" data-fechar aria-label="Fechar">&times;</button>
+        </header>
+
+        <dl class="evt-resumo">
+            <div>
+                <dt>Data</dt>
+                <dd data-campo="data"></dd>
+            </div>
+            <div>
+                <dt>Horário</dt>
+                <dd data-campo="horario"></dd>
+            </div>
+        </dl>
+
+        <div class="evt-descricao">
+            <h3>Descrição</h3>
+            <p data-campo="descricao"></p>
+        </div>
+
+        <footer class="evt-rodape">
+            <button type="button" class="evt-btn evt-btn--texto" data-fechar>Fechar</button>
+            <button type="button" class="evt-btn evt-btn--principal" data-acao="editar" hidden>
+                Atualizar evento
+            </button>
+        </footer>
+    </section>
+
+    {# ---------- Modo edição ---------- #}
+    <form class="evt-painel" data-painel="editar" method="post" novalidate hidden>
+        {% csrf_token %}
+
+        <header class="evt-cab">
+            <h2 class="evt-titulo">Atualizar evento</h2>
+            <button type="button" class="evt-x" data-fechar aria-label="Fechar">&times;</button>
+        </header>
+
+        <p class="evt-erro evt-erro--geral" data-erro="__all__" role="alert" hidden></p>
+
+        <div class="evt-campo">
+            <label for="evt-f-titulo">Título</label>
+            <input id="evt-f-titulo" name="titulo" type="text" maxlength="100" required>
+            <p class="evt-erro" data-erro="titulo" hidden></p>
+        </div>
+
+        <div class="evt-linha">
+            <div class="evt-campo">
+                <label for="evt-f-data">Data</label>
+                <input id="evt-f-data" name="data" type="date" required>
+                <p class="evt-erro" data-erro="data" hidden></p>
+            </div>
+            <div class="evt-campo">
+                <label for="evt-f-inicio">Início</label>
+                <input id="evt-f-inicio" name="inicio" type="time" required>
+                <p class="evt-erro" data-erro="inicio" hidden></p>
+            </div>
+            <div class="evt-campo">
+                <label for="evt-f-fim">Fim</label>
+                <input id="evt-f-fim" name="fim" type="time" required>
+                <p class="evt-erro" data-erro="fim" hidden></p>
+            </div>
+        </div>
+
+        <div class="evt-campo">
+            <label for="evt-f-descricao">Descrição</label>
+            <textarea id="evt-f-descricao" name="descricao" rows="4" maxlength="500"
+                placeholder="Adicione detalhes, links ou observações"></textarea>
+            <p class="evt-erro" data-erro="descricao" hidden></p>
+        </div>
+
+        <footer class="evt-rodape evt-rodape--direita">
+            <button type="button" class="evt-btn evt-btn--borda" data-acao="cancelar">Cancelar</button>
+            <button type="submit" class="evt-btn evt-btn--principal">Salvar alterações</button>
+        </footer>
+    </form>
+</dialog>
+
+<script src="{% static 'eventos/js/modal_detalhes_evento.js' %}" defer></script>

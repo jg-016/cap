@@ -1,0 +1,20 @@
+@startuml diagrama_interacoes
+title CDU-018 - Visualizar turma
+
+skinparam maxMessageSize 220
+
+actor Estudante
+control "turmas.views.turma" as View
+entity Turma
+entity MembroDeTurma
+boundary "turma.html" as Tela
+
+Estudante -> View : GET /turmas/<id>
+View -> Turma : get_object_or_404(id) → turma
+View -> MembroDeTurma : filter(usuario, turma,\neh_admin=True).exists() → eh_admin
+View -> View : obter_dados_turma(request, turma)\n→ calendários, líderes e colegas
+View -> View : gerar_context_calendario_geral(...)\n→ eventos da semana
+View -> Tela : render(context)
+Tela --> Estudante : exibe a turma
+
+@enduml

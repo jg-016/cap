@@ -1,0 +1,201 @@
+
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ turma.nome }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'turmas/css/turma.css' %}">
+    <link rel="stylesheet" href="{% static 'turmas/css/modal_atualizar_turma.css' %}">
+    <link rel="stylesheet" href="{% static 'turmas/css/modal_excluir_turma.css' %}">
+    <link rel="stylesheet" href="{% static 'turmas/css/calendarios_turma.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/calendario_geral.css' %}">
+    <link rel="stylesheet" href="{% static 'eventos/css/modal_criar_evento.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/banner.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/pagina_banner.css' %}">
+    {% block css_painel_membros %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="pagina-banner paleta-{{ turma.paleta }}">
+    <header class="banner">
+        <div class="banner__acoes">
+            {% if usuario_eh_admin %}
+                <button
+                    class="icone banner__acao"
+                    type="button"
+                    data-abrir-modal="modal-atualizar-turma"
+                    aria-label="Atualizar turma"
+                >
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+            {% endif %}
+
+            <a href="{% url 'deletar_turma' turma.id %}" class="icone banner__acao" aria-label="Apagar turma">
+                <span class="material-symbols-outlined">delete</span>
+            </a>
+        </div>
+
+        <h1 class="banner__titulo">{{ turma.nome }}</h1>
+
+        <div class="banner__rodape">
+            <ul class="submenu paleta-{{ turma.paleta }}" role="tablist">
+                <li role="tab" tabindex="0" data-id-painel="painel-eventos">Eventos</li>
+                {% if usuario_eh_admin %}
+                    <li role="tab" tabindex="0" data-id-painel="painel-calendarios">Calendários</li>
+                {% endif %}
+                <li role="tab" tabindex="0" data-id-painel="painel-membros">Membros</li>
+            </ul>
+            <p class="banner__etiqueta" title="Compartilhe este código para outros estudantes entrarem na turma">
+                <span class="banner__rotulo">Código</span> <span class="banner__codigo">{{ turma.codigo }}</span>
+                <button type="button" class="banner__copiar" data-copiar="{{ turma.codigo }}" aria-label="Copiar código da turma">
+                    <span class="material-symbols-outlined">content_copy</span>
+                </button>
+            </p>
+        </div>
+    </header>
+
+    {% if usuario_eh_admin %}
+        <dialog class="modal-excluir-turma" id="modal-excluir-turma">
+            <section class="modal-excluir-turma__conteudo">
+                <button
+                    type="button"
+                    class="modal-excluir-turma__fechar"
+                    data-fechar-modal
+                    aria-label="Fechar"
+                >&times;</button>
+
+                <h2>Excluir turma ?</h2>
+                <p>cofirme a exclusão da turma "{{ turma.nome }}" <br> Essa ação não poderá ser desfeita.</p>
+
+                <form method="POST" action="{% url 'deletar_turma' turma.id %}">
+                    {% csrf_token %}
+                    <div class="modal-excluir-turma__acoes">
+                        <button type="button" data-fechar-modal>Cancelar</button>
+                        <button type="submit" class="modal-excluir-turma__confirmar">Excluir turma</button>
+                    </div>
+                </form>
+            </section>
+        </dialog>
+    {% endif %}
+
+    {% for message in messages %}
+        <p class="turma-mensagem turma-mensagem--{{ message.tags }}" role="status">
+            {{ message }}
+        </p>
+    {% endfor %}
+
+    {% if usuario_eh_admin %}
+        <section id="painel-calendarios" class="calendarios-turma" aria-labelledby="calendarios-turma-titulo">
+            <div class="calendarios-turma__cabecalho">
+                <h2 id="calendarios-turma-titulo">Calendários da turma</h2>
+                <div class="calendarios-turma__acoes">
+                    {% if calendarios_disponiveis %}
+                        <button type="button" data-abrir-modal="modal-associar-calendario-turma">
+                            Associar calendário
+                        </button>
+                    {% endif %}
+                    <button type="button" data-abrir-modal="modal-criar-calendario-turma">
+                        Criar calendário de turma
+                    </button>
+                </div>
+            </div>
+
+            {% if turma.calendarios %}
+                <ul class="lista-calendarios-turma">
+                    {% for calendario in turma.calendarios %}
+                        <li class="calendario-turma-item">
+                            <span class="calendario-turma-item__cor paleta-{{ calendario.paleta }}" aria-hidden="true"></span>
+                            <a href="{% url 'calendario' calendario.id %}">{{ calendario.nome }}</a>
+                            <button
+                                type="button"
+                                class="calendario-turma-item__remover"
+                                data-abrir-modal="modal-remover-calendario-{{ calendario.id }}"
+                            >Remover</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if calendarios_disponiveis %}
+                <dialog class="modal-calendario-turma" id="modal-associar-calendario-turma">
+                    <section class="modal-calendario-turma__conteudo">
+                        <button type="button" class="modal-calendario-turma__fechar" data-fechar-modal aria-label="Fechar">&times;</button>
+                        <h2>Associar calendário existente</h2>
+                        <form method="post" action="{% url 'adicionar_calendario' turma.id %}">
+                            {% csrf_token %}
+                            <label for="calendario_id">Calendário</label>
+                            <select id="calendario_id" name="calendario_id" required {% if not calendarios_disponiveis %}disabled{% endif %}>
+                                {% if calendarios_disponiveis %}
+                                    <option value="" selected disabled>Selecione um calendário</option>
+                                    {% for calendario in calendarios_disponiveis %}
+                                        <option value="{{ calendario.id }}">{{ calendario.nome }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="" selected disabled>Nenhum calendário disponível</option>
+                                {% endif %}
+                            </select>
+                            <div class="modal-calendario-turma__acoes">
+                                <button type="button" data-fechar-modal>Cancelar</button>
+                                <button type="submit" {% if not calendarios_disponiveis %}disabled{% endif %}>Associar</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
+            {% endif %}
+
+            <dialog class="modal-calendario-turma" id="modal-criar-calendario-turma">
+                <section class="modal-calendario-turma__conteudo">
+                    <button type="button" class="modal-calendario-turma__fechar" data-fechar-modal aria-label="Fechar">&times;</button>
+                    <h2>Criar calendário de turma</h2>
+                    <form method="post" action="{% url 'criar_calendario_turma' turma.id %}">
+                        {% csrf_token %}
+                        <label for="nome_calendario_turma">Nome</label>
+                        <input id="nome_calendario_turma" type="text" name="nome" maxlength="100" required>
+                        <label for="descricao_calendario_turma">Descrição</label>
+                        <textarea id="descricao_calendario_turma" name="descricao" rows="3" maxlength="500"></textarea>
+                        <div class="modal-calendario-turma__acoes">
+                            <button type="button" data-fechar-modal>Cancelar</button>
+                            <button type="submit">Criar calendário</button>
+                        </div>
+                    </form>
+                </section>
+            </dialog>
+
+            {% for calendario in turma.calendarios %}
+                <dialog class="modal-calendario-turma" id="modal-remover-calendario-{{ calendario.id }}">
+                    <section class="modal-calendario-turma__conteudo">
+                        <button type="button" class="modal-calendario-turma__fechar" data-fechar-modal aria-label="Fechar">&times;</button>
+                        <h2>Remover calendário da turma?</h2>
+                        <p>{{ calendario.nome }} e seus eventos serão apagados.</p>
+                        <form method="post" action="{% url 'remover_calendario_turma' turma.id calendario.id %}">
+                            {% csrf_token %}
+                            <div class="modal-calendario-turma__acoes">
+                                <button type="button" data-fechar-modal>Cancelar</button>
+                                <button type="submit">Remover</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    <div id="painel-eventos" class="painel-eventos">
+        {% include 'core/calendario_geral.html' %}
+    </div>
+
+    {% if usuario_eh_admin %}
+        {% include 'turmas/modal_atualizar_turma.html' %}
+    {% endif %}
+
+    {% include 'core/painel_membros.html' %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'turmas/js/modal_atualizar_turma.js' %}" defer></script>
+    <script src="{% static 'turmas/js/modal_calendarios_turma.js' %}" defer></script>
+    <script src="{% static 'turmas/js/modal_excluir_turma.js' %}" defer></script>
+    <script src="{% static 'core/js/submenu.js' %}" defer></script>
+    <script src="{% static 'core/js/banner.js' %}" defer></script>
+{% endblock %}

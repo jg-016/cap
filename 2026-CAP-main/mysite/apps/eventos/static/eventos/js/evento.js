@@ -1,0 +1,179 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const createModal = document.getElementById('eventModal');
+    const addEventButtons =
+        document.querySelectorAll('.botao-criar-evento');
+    const cancelButtons =
+        document.querySelectorAll('.botao-cancelar-evento');
+    const closeButtons =
+        document.querySelectorAll('.modal .close');
+    function showModal(modal) {
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+
+    }
+
+
+    function hideModal(modal) {
+
+        if (modal) {
+            modal.style.display = 'none';
+        }
+
+    }
+
+
+    function closeAllModals() {
+        hideModal(createModal);
+    }
+
+    function openCreateModal() {
+        if (!createModal) {
+            return;
+        }
+        const form = createModal.querySelector('form');
+        if (form) {
+            form.reset();
+        }
+        showModal(createModal);
+    }
+
+    window.openCreateModal = openCreateModal;
+
+    addEventButtons.forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            openCreateModal();
+        });
+    });
+
+    cancelButtons.forEach(function (button) {
+        button.addEventListener('click', closeAllModals);
+    });
+
+    closeButtons.forEach(function (button) {
+        button.addEventListener('click', closeAllModals);
+    });
+
+    window.addEventListener('click', function (event) {
+        if (event.target === createModal) {
+            hideModal(createModal);
+        }
+    });
+
+    function posicionarEventos() {
+        const eventos =
+            document.querySelectorAll('.evento-calendario');
+        const colunas =
+            document.querySelectorAll(
+                '.colunas-datas > div'
+            );
+        const grade =
+            document.querySelector('.grade-eventos');
+        if (!eventos.length) {
+            return;
+        }
+        if (!colunas.length) {
+            return;
+        }
+        if (!grade) {
+            return;
+        }
+        const alturaGrade =
+            grade.clientHeight;
+        const minutosDoDia =
+            24 * 60;
+
+
+        eventos.forEach(function (evento) {
+            const data =
+                evento.dataset.data;
+            const inicio =
+                evento.dataset.inicio;
+            const fim =
+                evento.dataset.fim;
+            if (!data || !inicio || !fim) {
+                return;
+            }
+            const coluna =
+                Array.from(colunas).find(function (coluna) {
+
+                    return coluna.dataset.data === data;
+
+                });
+            if (!coluna) {
+                return;
+            }
+            const partesInicio =
+                inicio.split(':');
+            const partesFim =
+                fim.split(':');
+            const horaInicio =
+                Number(partesInicio[0]);
+            const minutoInicio =
+                Number(partesInicio[1]);
+            const horaFim =
+                Number(partesFim[0]);
+            const minutoFim =
+                Number(partesFim[1]);
+            const inicioEmMinutos =
+                horaInicio * 60 + minutoInicio;
+            const fimEmMinutos =
+                horaFim * 60 + minutoFim;
+            const top =
+                (inicioEmMinutos / minutosDoDia)
+                * alturaGrade;
+            const height =
+                ((fimEmMinutos - inicioEmMinutos)
+                / minutosDoDia)
+                * alturaGrade;
+            evento.style.top =
+                `${top}px`;
+            evento.style.height =
+                `${height}px`;
+            evento.style.left =
+                `${coluna.offsetLeft + 4}px`;
+            evento.style.width =
+                `${coluna.offsetWidth - 8}px`;
+
+        });
+
+    }
+    posicionarEventos();
+    window.addEventListener(
+        'resize',
+        posicionarEventos
+    );
+
+
+});
+
+/* =========================================
+MODAL CRIAR EVENTO > SELECIONAR CALENDÁRIO
+========================================= */
+const botaoSelecionarCalendario = document.querySelector('.calendario-selecionado')
+const calendarioSelecionado = document.querySelector('.opcao-calendario.selecionado')
+const divOpcoesCalendario = document.querySelector('.opcoes-calendario')
+const listaOpcoesCalendario = document.querySelectorAll('.opcoes-calendario .opcao-calendario')
+const inputHidden = document.querySelector('#id-calendario')
+
+botaoSelecionarCalendario.addEventListener('click', () => {
+    divOpcoesCalendario.classList.toggle('oculto')
+})
+
+listaOpcoesCalendario.forEach((opcao) => {
+    opcao.addEventListener('click', () => {
+        // Preserva o ícone de seta do botão
+        const iconeSeta = calendarioSelecionado.querySelector('.icone-abrir-opcoes-calendarios').outerHTML
+        
+        const conteudoNovo = opcao.children[0].outerHTML + opcao.children[1].outerHTML
+
+        calendarioSelecionado.innerHTML = conteudoNovo + iconeSeta
+
+        console.log(inputHidden)
+        inputHidden.value = opcao.dataset.idCalendario
+        console.log(inputHidden)
+
+        divOpcoesCalendario.classList.add('oculto')
+    })
+})
