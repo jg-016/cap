@@ -85,6 +85,7 @@ TEMPLATES = [
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8000',
     'http://localhost:8000',
+    'https://localhost:800',
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"

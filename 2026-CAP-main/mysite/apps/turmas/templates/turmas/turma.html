@@ -105,12 +105,27 @@
                     {% for calendario in turma.calendarios %}
                         <li class="calendario-turma-item">
                             <span class="calendario-turma-item__cor paleta-{{ calendario.paleta }}" aria-hidden="true"></span>
-                            <a href="{% url 'calendario' calendario.id %}">{{ calendario.nome }}</a>
-                            <button
-                                type="button"
-                                class="calendario-turma-item__remover"
-                                data-abrir-modal="modal-remover-calendario-{{ calendario.id }}"
-                            >Remover</button>
+                            <a class="calendario-turma-item__nome" href="{% url 'calendario' calendario.id %}">{{ calendario.nome }}</a>
+                            <div class="calendario-turma-item__acoes">
+                                {% if calendario.eh_admin %}
+                                    <a
+                                        href="{% url 'atualizar_calendario' calendario.id %}"
+                                        class="calendario-turma-item__editar"
+                                        aria-label="Atualizar calendário {{ calendario.nome }}"
+                                        title="Atualizar calendário"
+                                    >
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M12 20h9"/>
+                                            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                                        </svg>
+                                    </a>
+                                {% endif %}
+                                <button
+                                    type="button"
+                                    class="calendario-turma-item__remover"
+                                    data-abrir-modal="modal-remover-calendario-{{ calendario.id }}"
+                                >Remover</button>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>

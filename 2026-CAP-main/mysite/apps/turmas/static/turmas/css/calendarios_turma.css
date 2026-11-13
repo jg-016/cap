@@ -24,6 +24,7 @@
 }
 
 .calendarios-turma__acoes button,
+.calendario-turma-item__editar,
 .calendario-turma-item__remover {
     min-height: 34px;
     padding: 6px 10px;
@@ -37,12 +38,14 @@
 }
 
 .calendarios-turma__acoes button:hover,
+.calendario-turma-item__editar:hover,
 .calendario-turma-item__remover:hover {
     border-color: var(--cor-media);
     background: var(--cor-de-fundo-3);
 }
 
 .calendarios-turma__acoes button:focus-visible,
+.calendario-turma-item__editar:focus-visible,
 .calendario-turma-item__remover:focus-visible,
 .modal-calendario-turma button:focus-visible,
 .modal-calendario-turma input:focus-visible,
@@ -55,7 +58,7 @@
 .lista-calendarios-turma {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+    gap: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -72,17 +75,23 @@
 
 .calendario-turma-item {
     min-width: 0;
-    min-height: 42px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 5px 8px;
+    padding: 8px 10px;
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio);
     background: var(--cor-de-fundo-1);
 }
 
-.calendario-turma-item a {
+.calendario-turma-item__acoes {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.calendario-turma-item__nome {
     min-width: 0;
     flex: 1;
     overflow: hidden;
@@ -99,11 +108,27 @@
 }
 
 .calendario-turma-item__remover {
-    min-height: 30px;
-    padding: 4px 8px;
+    min-height: 32px;
+    padding: 4px 10px;
     border-color: transparent;
     color: #8a2525;
-    font-size: 14px;
+    font-size: 15px;
+}
+
+.calendario-turma-item__editar {
+    width: 20px;
+    min-height: 24px;
+    flex: 0 0 20px;
+    display: grid;
+    place-items: center;
+    padding: 2px;
+    border-color: transparent;
+    color: var(--cor-de-fonte-2);
+}
+
+.calendario-turma-item__editar svg {
+    width: 16px;
+    height: 16px;
 }
 
 .calendario-turma-item__remover:hover {

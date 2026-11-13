@@ -15,7 +15,9 @@ preserva o formulário quando há erros e impede alterações por outros usuári
 | `mysite/apps/calendarios/templates/calendarios/atualizar_calendario.html` | Formulário HTML, exibição de erros e ação de cancelamento. |
 | `mysite/apps/calendarios/static/calendarios/css/atualizar_calendario.css` | Estilo responsivo da tela de edição. |
 | `mysite/apps/calendarios/templates/calendarios/calendario.html` | Exibe a ação de edição para administradores e a confirmação depois do redirecionamento. |
+| `mysite/apps/turmas/templates/turmas/turma.html` | Exibe o ícone de edição em cada calendário associado administrado pelo usuário. |
 | `mysite/apps/calendarios/tests.py` | Testes de GET, atualização, validação e autorização. |
+| `mysite/apps/turmas/tests.py` | Verifica a exibição condicional do ícone na lista de calendários da turma. |
 | `doc/cdu/010/cdu_010.md` | Link para este guia. |
 
 Não é necessária uma migração: os campos `nome` e `descricao` já existem no
@@ -28,7 +30,9 @@ O nome da rota é `atualizar_calendario`; o caminho registrado pelo app é
 ## Fluxo implementado
 
 1. A ação “Editar calendário”, exibida na página do calendário para
-   administradores, abre a rota com GET.
+   administradores, e o ícone de lápis na lista de calendários associados da
+   turma abrem a rota com GET. O ícone da lista só aparece para administradores
+   daquele calendário.
 2. A view busca o calendário e retorna 404 se o identificador não existir.
 3. A view confere no servidor se o usuário tem um vínculo administrador.
    Usuários sem vínculo ou sem papel de administrador recebem HTTP 403, tanto

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="pagina-banner paleta-{{ usuario.paleta }}">
+<div class="pagina-banner{% if calendario.turma %} pagina-banner--calendario-turma{% endif %} paleta-{{ usuario.paleta }}">
     {% for message in messages %}
         <p class="calendario-mensagem calendario-mensagem--{{ message.tags }}" role="status">
             {{ message }}

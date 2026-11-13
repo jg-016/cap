@@ -10,6 +10,10 @@ main .pagina-banner {
     flex-direction: column;
 }
 
+main .pagina-banner--calendario-turma {
+    max-width: none;
+}
+
 .painel-eventos {
     flex: 1;
     min-height: 0;

@@ -314,6 +314,51 @@ class AtualizarTurmaTests(TestCase):
             2,
         )
 
+    def test_pagina_da_turma_exibe_icone_para_editar_calendario_administrado(self):
+        calendario = Calendario.objects.create(
+            nome='Calendário da turma',
+            turma=self.turma,
+        )
+        MembroDeCalendario.objects.create(
+            usuario=self.admin,
+            calendario=calendario,
+            eh_admin=True,
+            numero_paleta=1,
+        )
+        self.client.force_login(self.admin)
+
+        response = self.client.get(reverse('turma', args=[self.turma.id]))
+
+        self.assertContains(
+            response,
+            f'href="{reverse("atualizar_calendario", args=[calendario.id])}"',
+        )
+        self.assertContains(
+            response,
+            'aria-label="Atualizar calendário Calendário da turma"',
+        )
+        self.assertContains(response, '<svg')
+
+    def test_pagina_da_turma_nao_exibe_edicao_para_membro_comum_do_calendario(self):
+        calendario = Calendario.objects.create(
+            nome='Calendário da turma',
+            turma=self.turma,
+        )
+        MembroDeCalendario.objects.create(
+            usuario=self.admin,
+            calendario=calendario,
+            eh_admin=False,
+            numero_paleta=1,
+        )
+        self.client.force_login(self.admin)
+
+        response = self.client.get(reverse('turma', args=[self.turma.id]))
+
+        self.assertNotContains(
+            response,
+            reverse('atualizar_calendario', args=[calendario.id]),
+        )
+
     # Teste de autorização da funcionalidade antiga, preservado para
     # desenvolvedores:
     # def test_membro_comum_nao_pode_associar_calendario(self):

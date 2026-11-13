@@ -30,6 +30,7 @@ def _get_dados_calendario(request, calendario: Calendario) -> dict:
         'nome': calendario.nome,
         'descricao': calendario.descricao,
         'paleta': membro.numero_paleta,
+        'eh_admin': membro.eh_admin,
         'eventos_visiveis': eventos_visiveis,
         'botao_menu_preenchido': botao_menu_preenchido,
     }
