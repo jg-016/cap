@@ -1,31 +1,174 @@
-#painel-membros {
-    h2 {
-        font-size: 18px;
-        font-weight: 600;
-        margin-block: 16px 8px;
-    }
-    .lista-membros {
-        border: 1px solid var(--cor-borda);
-        border-radius: var(--raio);
-        overflow: hidden;
-    }
+.lista-membros {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    overflow: hidden;
+    background: var(--cor-de-fundo-1);
+}
+
+.membro {
+    min-height: 56px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--cor-borda);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: background-color .15s;
+}
+
+.membro:last-child {
+    border-bottom: 0;
+}
+
+.membro:hover {
+    background-color: var(--cor-suave, var(--cor-de-fundo-2));
+}
+
+.membro__identidade {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.membro__texto {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.nome-membro {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.membro__acao {
+    border: 1px solid transparent;
+    border-radius: var(--raio);
+    background: transparent;
+    color: #8a2525;
+    font: inherit;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s;
+    white-space: nowrap;
+}
+
+.membro__acao:hover {
+    background-color: color-mix(in srgb, #8a2525 8%, transparent);
+    border-color: color-mix(in srgb, #8a2525 20%, transparent);
+}
+
+.icone-email {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--cor-de-fundo-2);
+    color: var(--cor-de-fonte-2);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.modal-remover-participante {
+    box-sizing: border-box;
+    width: min(420px, calc(100% - 32px));
+    padding: 0;
+    margin: auto;
+    border: 0;
+    border-radius: var(--raio-modal);
+    color: #1f2937;
+    box-shadow: var(--sombra-modal);
+}
+
+.modal-remover-participante::backdrop {
+    background: rgba(17, 24, 39, 0.6);
+}
+
+.modal-remover-participante__conteudo {
+    position: relative;
+    padding: 24px;
+}
+
+.modal-remover-participante__conteudo h3 {
+    margin: 0 32px 10px 0;
+    font-size: 20px;
+}
+
+.modal-remover-participante__conteudo p {
+    margin: 0 0 18px;
+    line-height: 1.5;
+}
+
+.modal-remover-participante__fechar {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    border: 0;
+    background: transparent;
+    color: var(--cor-de-fonte-2);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-remover-participante form {
+    margin: 0;
+}
+
+.modal-remover-participante__acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.modal-remover-participante__acoes button {
+    min-height: 36px;
+    padding: 7px 12px;
+    border: 1px solid var(--cor-escura, #333);
+    border-radius: var(--raio);
+    background: transparent;
+    color: var(--cor-escura, #333);
+    font: inherit;
+    cursor: pointer;
+}
+
+.modal-remover-participante__acoes button:hover {
+    background: var(--cor-suave, var(--cor-de-fundo-3));
+}
+
+.modal-remover-participante__confirmar {
+    border-color: #b91c1c !important;
+    background: #b91c1c !important;
+    color: #fff !important;
+}
+
+.modal-remover-participante__confirmar:hover {
+    border-color: #991b1b !important;
+    background: #991b1b !important;
+}
+
+@media (max-width: 480px) {
     .membro {
-        height: 44px;
-        padding-inline: 14px;
-        border-bottom: 1px solid var(--cor-borda);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: background-color .15s;
+        align-items: flex-start;
+        padding-block: 10px;
     }
-    .membro:last-child {
-        border-bottom: 0;
+
+    .membro__identidade {
+        flex: 1;
     }
-    .membro:hover {
-        background-color: var(--cor-suave, var(--cor-de-fundo-2));
-    }
-    .icone-email {
-        font-size: 20px;
-        color: var(--cor-de-fonte-2);
+
+    .modal-remover-participante__conteudo {
+        padding: 20px;
     }
 }

@@ -5,26 +5,31 @@ Este guia registra a implementação do fluxo de edição descrito em
 permite que um administrador atualize o nome e a descrição de um calendário,
 preserva o formulário quando há erros e impede alterações por outros usuários.
 
-## Arquivos alterados e criados
+## Arquivos envolvidos
 
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `mysite/apps/calendarios/forms.py` | Formulário de modelo com os campos nome e descrição. |
 | `mysite/apps/calendarios/views.py` | Busca o calendário, autoriza, valida, salva e redireciona. |
+| `mysite/apps/calendarios/urls.py` | Registra a rota nomeada `atualizar_calendario` usada pela tela e pelo formulário. |
 | `mysite/apps/calendarios/templates/calendarios/atualizar_calendario.html` | Formulário HTML, exibição de erros e ação de cancelamento. |
 | `mysite/apps/calendarios/static/calendarios/css/atualizar_calendario.css` | Estilo responsivo da tela de edição. |
-| `mysite/apps/calendarios/templates/calendarios/calendario.html` | Exibe a confirmação depois do redirecionamento. |
+| `mysite/apps/calendarios/templates/calendarios/calendario.html` | Exibe a ação de edição para administradores e a confirmação depois do redirecionamento. |
 | `mysite/apps/calendarios/tests.py` | Testes de GET, atualização, validação e autorização. |
 | `doc/cdu/010/cdu_010.md` | Link para este guia. |
 
 Não é necessária uma migração: os campos `nome` e `descricao` já existem no
 modelo `Calendario`, com limites de 100 e 500 caracteres, respectivamente.
 
+O nome da rota é `atualizar_calendario`; o caminho registrado pelo app é
+`atualizar_calendario/<int:id>` e, com o prefixo do app, é acessado como
+`/calendarios/atualizar_calendario/<id>`. A rota já existia e é reutilizada.
+
 ## Fluxo implementado
 
-1. A ação “Editar calendário” na página do calendário abre a rota
-   `/calendarios/atualizar_calendario/<id>` com GET.
-2. A view busca o calendário; retorna 404 se o identificador não existir.
+1. A ação “Editar calendário”, exibida na página do calendário para
+   administradores, abre a rota com GET.
+2. A view busca o calendário e retorna 404 se o identificador não existir.
 3. A view confere no servidor se o usuário tem um vínculo administrador.
    Usuários sem vínculo ou sem papel de administrador recebem HTTP 403, tanto
    no GET quanto no POST.
@@ -35,6 +40,9 @@ modelo `Calendario`, com limites de 100 e 500 caracteres, respectivamente.
    validação.
 6. Com dados válidos, o formulário salva os campos, mostra uma mensagem de
    sucesso na página seguinte e redireciona para o calendário atualizado.
+
+O endpoint exige login e aceita apenas GET e POST. A autorização não depende
+da visibilidade do botão: ela é verificada pela view para cada requisição.
 
 ## Código principal
 
@@ -131,6 +139,14 @@ autoridade.
         </div>
     {% endfor %}
 
+    {% if form.non_field_errors %}
+        <ul class="formulario-calendario__erros" role="alert">
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <div class="formulario-calendario__acoes">
         <a href="{% url 'calendario' calendario.id %}">Cancelar</a>
         <button type="submit">Salvar alterações</button>
@@ -139,7 +155,10 @@ autoridade.
 ```
 
 A página do calendário também percorre o contexto `messages` para mostrar
-“Calendário atualizado com sucesso.” após o redirecionamento.
+“Calendário atualizado com sucesso.” após o redirecionamento. O CSS usa as
+variáveis de cor e de borda do tema, destaca foco por teclado e, em telas de até
+480 px, empilha as ações para manter os controles utilizáveis em dispositivos
+móveis.
 
 ## Como reproduzir a implementação
 
@@ -164,14 +183,27 @@ A página do calendário também percorre o contexto `messages` para mostrar
 
 ## Testes cobertos
 
-- GET de administrador exibe dados atuais, botão de cancelar e token CSRF.
-- POST válido atualiza os campos e redireciona com confirmação.
-- POST com campos acima dos limites mantém os dados enviados e não altera o
-  calendário no banco.
-- Nome vazio é rejeitado sem salvar.
-- POST vazio é tratado como envio e retorna erros de validação.
-- Membro comum não consegue enviar alterações.
-- Usuário sem vínculo não consegue abrir a tela de edição.
+- `test_get_exibe_formulario_com_dados_atuais_e_cancelamento` — GET de
+  administrador exibe os dados atuais, o botão de cancelar e o token CSRF.
+- `test_post_valido_atualiza_e_redireciona_com_confirmacao` — POST válido
+  atualiza os campos e redireciona com confirmação.
+- `test_post_invalido_preserva_valores_e_nao_atualiza_modelo` — valores acima
+  dos limites são exibidos novamente sem alterar o calendário no banco.
+- `test_nome_obrigatorio_nao_pode_ser_enviado_vazio` — rejeita nome vazio sem
+  salvar.
+- `test_post_sem_dados_e_rejeitado_com_erros` — trata POST vazio como envio e
+  retorna erros de validação.
+- `test_nao_admin_e_usuario_sem_vinculo_recebem_403_sem_alteracao` — verifica
+  que membro comum e usuário sem vínculo recebem HTTP 403 sem alterar o
+  calendário.
+
+Validação executada no diretório `mysite`:
+
+```bash
+python manage.py test apps.calendarios.tests.AtualizarCalendarioTests --settings=config.settings.testing
+```
+
+Resultado: **6 testes passaram** e o system check não reportou problemas.
 
 Para validar manualmente, entre com uma conta administradora, abra um
 calendário e selecione o ícone de edição. Teste salvar valores válidos,

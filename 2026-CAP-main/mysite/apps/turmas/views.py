@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 
@@ -40,11 +41,12 @@ def _sincronizar_membros_calendario_turma(turma, calendario):
 @login_required
 def turma(request, id):
     turma = get_object_or_404(Turma, id=id)
-    membro = MembroDeTurma.objects.filter(
+    membro_turma = get_object_or_404(
+        MembroDeTurma,
         usuario=request.user,
         turma=turma,
-        eh_admin=True,
-    ).exists()
+    )
+    membro = membro_turma.eh_admin
 
     dados_turma = obter_dados_turma(request, turma)
     dados_membros = dados_turma.pop('membros')
@@ -53,6 +55,7 @@ def turma(request, id):
         'turma': dados_turma,
         'painel_membros': dados_membros,
         'usuario_eh_admin': membro,
+        'pode_remover_participantes': membro,
         'calendarios_disponiveis': request.user.calendarios.filter(turma__isnull=True),
         'paletas_disponiveis': PALETAS_TURMA,
     }
@@ -258,4 +261,39 @@ def remover_calendario_turma(request, turma_id=None, calendario_id=None):
 
     calendario.delete()
     messages.success(request, 'Calendário removido da turma com sucesso.')
+    return redirect('turma', turma.id)
+
+
+@login_required
+@require_POST
+def remover_participante_turma(request, turma_id, usuario_id):
+    turma = get_object_or_404(Turma, id=turma_id)
+    admin = MembroDeTurma.objects.filter(
+        usuario=request.user,
+        turma=turma,
+        eh_admin=True,
+    ).first()
+
+    if not admin:
+        messages.error(request, 'Você não tem permissão para remover participantes desta turma.')
+        return redirect('turma', turma.id)
+
+    if request.user.id == usuario_id:
+        messages.error(request, 'Você não pode remover a si mesmo da turma. Use a opção de sair da turma.')
+        return redirect('turma', turma.id)
+
+    membro = get_object_or_404(MembroDeTurma, turma=turma, usuario_id=usuario_id)
+
+    if membro.eh_admin:
+        messages.error(request, 'Administradores não podem remover outros administradores da turma.')
+        return redirect('turma', turma.id)
+
+    with transaction.atomic():
+        membro.delete()
+        MembroDeCalendario.objects.filter(
+            usuario_id=usuario_id,
+            calendario__turma=turma,
+        ).delete()
+
+    messages.success(request, f'{membro.usuario.nome_completo} foi removido da turma.')
     return redirect('turma', turma.id)

@@ -29,6 +29,8 @@ def popular_usuarios(dados_usuarios):
 
 
 def popular_turmas(dados_turmas):
+    usuarios = list(Usuario.objects.order_by('id'))
+
     for dados in dados_turmas:
         dados_calendarios = dados.pop('calendarios', [])
         numero_paleta = dados.pop('numero_paleta', 1)
@@ -37,11 +39,20 @@ def popular_turmas(dados_turmas):
         turma = Turma.objects.create(descricao=descricao, **dados)
         popular_calendarios(dados_calendarios, turma=turma, numero_paleta=numero_paleta)
 
-        for usuario in Usuario.objects.all():
+        administradores_ids = set(
+            MembroDeCalendario.objects.filter(
+                calendario__turma=turma,
+                eh_admin=True,
+            ).values_list('usuario_id', flat=True)
+        )
+        if not administradores_ids and usuarios:
+            administradores_ids.add(usuarios[0].id)
+
+        for usuario in usuarios:
             MembroDeTurma.objects.create(
                 usuario=usuario,
                 turma=turma,
-                eh_admin=True,
+                eh_admin=usuario.id in administradores_ids,
                 numero_paleta=numero_paleta
             )
 

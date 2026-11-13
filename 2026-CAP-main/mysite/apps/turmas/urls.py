@@ -8,6 +8,8 @@ urlpatterns = [
     path('adicionar_calendario/<int:turma_id>', views.adicionar_calendario_turma, name='adicionar_calendario'),
     path('remover_calendario/<int:turma_id>', views.remover_calendario_turma, name='remover_calendario'),
     path('remover_calendario/<int:turma_id>/<int:calendario_id>', views.remover_calendario_turma, name='remover_calendario_turma'),
+    path('remover_participante/<int:turma_id>/<int:usuario_id>', views.remover_participante_turma, name='remover_participante_turma'),
+    path('remover_participante_turma/<int:turma_id>/<int:usuario_id>', views.remover_participante_turma, name='remover_participante_turma_legacy'),
     path('atualizar_turma/<int:id>', views.atualizar_turma, name='atualizar_turma'),
     path('deletar_turma/<int:id>', views.deletar_turma, name='deletar_turma'),
 ]

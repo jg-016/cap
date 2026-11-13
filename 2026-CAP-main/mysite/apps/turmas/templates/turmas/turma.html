@@ -114,6 +114,10 @@
                         </li>
                     {% endfor %}
                 </ul>
+            {% else %}
+                <p class="calendarios-turma__vazio">
+                    Ainda não há calendários associados a esta turma. Associe um existente ou crie um novo.
+                </p>
             {% endif %}
 
             {% if calendarios_disponiveis %}
@@ -196,6 +200,7 @@
     <script src="{% static 'turmas/js/modal_atualizar_turma.js' %}" defer></script>
     <script src="{% static 'turmas/js/modal_calendarios_turma.js' %}" defer></script>
     <script src="{% static 'turmas/js/modal_excluir_turma.js' %}" defer></script>
+    <script src="{% static 'turmas/js/modal_participante_turma.js' %}" defer></script>
     <script src="{% static 'core/js/submenu.js' %}" defer></script>
     <script src="{% static 'core/js/banner.js' %}" defer></script>
 {% endblock %}

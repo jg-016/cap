@@ -54,25 +54,29 @@ def gerar_context_eventos(
         calendarios_visiveis.append(calendario)
 
     for calendario in calendarios_visiveis:
-        membro_calendario = MembroDeCalendario.objects.get(
-            calendario=calendario, 
-            usuario=request.user
-        )
+        membro_calendario = MembroDeCalendario.objects.filter(
+            calendario=calendario,
+            usuario=request.user,
+        ).first()
+
+        if membro_calendario is None:
+            continue
+
         eventos = Evento.objects.filter(
-            calendario=calendario, 
+            calendario=calendario,
             inicio__date__in=[data.isoformat() for data in datas]
         )
 
         for evento in eventos:
-            eventos_context.append( {
+            eventos_context.append({
                 'id': evento.id,
                 'nome': evento.nome,
                 'conteudo': evento.conteudo,
                 'inicio': evento.inicio,
                 'fim': evento.fim,
                 'calendario_id': calendario.id,
-                'paleta': membro_calendario.numero_paleta
-            } )
+                'paleta': membro_calendario.numero_paleta,
+            })
         
     return eventos_context
 

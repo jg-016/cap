@@ -4,30 +4,50 @@
     <link rel="stylesheet" href="{% static 'core/css/painel_membros.css' %}">
 {% endblock %}
 
-<div id="painel-membros">
-    <h2>Líderes</h2>
-
-    {% if painel_membros.lideres %}
-        <ul class="lista-membros">
-            {% for membro in painel_membros.lideres %}
-                <li class="membro">
-                    <p class="nome-membro">{{ membro.nome }}</p>
+<div id="painel-membros" class="oculto">
+    <ul class="lista-membros">
+        {% for membro in painel_membros.lideres %}
+            <li class="membro">
+                <div class="membro__identidade">
                     <span class="icone-email material-symbols-outlined">mail</span>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <h2>Colegas de turma</h2>
-
-    {% if painel_membros.colegas %}
-        <ul class="lista-membros">
-            {% for membro in painel_membros.colegas %}
-                <li class="membro">
                     <p class="nome-membro">{{ membro.nome }}</p>
+                </div>
+            </li>
+        {% endfor %}
+
+        {% for membro in painel_membros.colegas %}
+            <li class="membro">
+                <div class="membro__identidade">
                     <span class="icone-email material-symbols-outlined">mail</span>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                    <p class="nome-membro">{{ membro.nome }}</p>
+                </div>
+                {% if pode_remover_participantes and membro.usuario_id != request.user.id %}
+                    <button
+                        type="button"
+                        class="membro__acao"
+                        data-abrir-modal="modal-remover-participante-{{ membro.usuario_id }}"
+                        aria-label="Remover participante {{ membro.nome }}"
+                    >
+                        Remover
+                    </button>
+                {% endif %}
+            </li>
+            {% if pode_remover_participantes and membro.usuario_id != request.user.id %}
+                <dialog class="modal-remover-participante" id="modal-remover-participante-{{ membro.usuario_id }}">
+                    <section class="modal-remover-participante__conteudo">
+                        <button type="button" class="modal-remover-participante__fechar" data-fechar-modal aria-label="Fechar">&times;</button>
+                        <h3>Remover participante?</h3>
+                        <p>Deseja remover <strong>{{ membro.nome }}</strong> da turma? O acesso dele aos calendários associados será revogado.</p>
+                        <form method="post" action="{% url 'remover_participante_turma' turma.id membro.usuario_id %}">
+                            {% csrf_token %}
+                            <div class="modal-remover-participante__acoes">
+                                <button type="button" data-fechar-modal>Cancelar</button>
+                                <button type="submit" class="modal-remover-participante__confirmar">Remover</button>
+                            </div>
+                        </form>
+                    </section>
+                </dialog>
+            {% endif %}
+        {% endfor %}
+    </ul>
 </div>

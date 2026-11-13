@@ -1,5 +1,6 @@
 .calendarios-turma {
     margin: 0 0 20px;
+    padding: 18px;
 }
 
 .calendarios-turma__cabecalho {
@@ -7,10 +8,12 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .calendarios-turma__cabecalho h2 {
+    margin: 0;
+    color: var(--cor-de-fonte-1);
     font-size: 18px;
 }
 
@@ -24,22 +27,47 @@
 .calendario-turma-item__remover {
     min-height: 34px;
     padding: 6px 10px;
-    border: 1px solid var(--cor-escura, #333);
+    border: 1px solid var(--cor-borda);
     border-radius: var(--raio);
-    background: transparent;
-    color: var(--cor-escura, #333);
+    background: var(--cor-de-fundo-1);
+    color: var(--cor-de-fonte-1);
     font: inherit;
     cursor: pointer;
+    transition: border-color .15s, background-color .15s, color .15s;
 }
 
-.calendarios-turma__acoes button:hover {
-    background: var(--cor-suave, var(--cor-de-fundo-3));
+.calendarios-turma__acoes button:hover,
+.calendario-turma-item__remover:hover {
+    border-color: var(--cor-media);
+    background: var(--cor-de-fundo-3);
+}
+
+.calendarios-turma__acoes button:focus-visible,
+.calendario-turma-item__remover:focus-visible,
+.modal-calendario-turma button:focus-visible,
+.modal-calendario-turma input:focus-visible,
+.modal-calendario-turma select:focus-visible,
+.modal-calendario-turma textarea:focus-visible {
+    outline: 2px solid var(--cor-media);
+    outline-offset: 2px;
 }
 
 .lista-calendarios-turma {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.calendarios-turma__vazio {
+    margin: 0;
+    padding: 14px;
+    border: 1px dashed var(--cor-borda);
+    border-radius: var(--raio);
+    color: var(--cor-de-fonte-2);
+    line-height: 1.5;
 }
 
 .calendario-turma-item {
@@ -51,7 +79,7 @@
     padding: 5px 8px;
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio);
-    background: var(--cor-de-fundo-2);
+    background: var(--cor-de-fundo-1);
 }
 
 .calendario-turma-item a {
@@ -79,6 +107,7 @@
 }
 
 .calendario-turma-item__remover:hover {
+    border-color: color-mix(in srgb, #8a2525 20%, transparent);
     background: color-mix(in srgb, #8a2525 8%, transparent);
 }
 
@@ -165,16 +194,16 @@
 .modal-calendario-turma__acoes button {
     min-height: 36px;
     padding: 7px 12px;
-    border: 1px solid var(--cor-escura, #333);
+    border: 1px solid var(--cor-borda);
     border-radius: var(--raio);
-    background: transparent;
-    color: var(--cor-escura, #333);
+    background: var(--cor-de-fundo-1);
+    color: var(--cor-de-fonte-1);
     font: inherit;
     cursor: pointer;
 }
 
 .modal-calendario-turma__acoes button:hover {
-    background: var(--cor-suave, var(--cor-de-fundo-3));
+    background: var(--cor-de-fundo-3);
 }
 
 .modal-calendario-turma__acoes button[type="submit"] {
@@ -194,6 +223,10 @@
 }
 
 @media (max-width: 600px) {
+    .calendarios-turma {
+        padding: 14px;
+    }
+
     .calendarios-turma__cabecalho {
         align-items: flex-start;
         flex-direction: column;

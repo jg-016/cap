@@ -52,6 +52,7 @@ def obter_dados_turma(request, turma: Turma) -> dict:
         usuario = membro.usuario
 
         dados_membro = {
+            'usuario_id': usuario.id,
             'nome': usuario.nome_completo,
             'email': usuario.email,
         }
